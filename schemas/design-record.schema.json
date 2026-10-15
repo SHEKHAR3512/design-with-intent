@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/SHEKHAR3512/design-with-intent/main/schemas/design-record.schema.json",
+  "title": "DesignRecord",
+  "description": "Validation schema for Design with Intent decision records (DESIGN.md)",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "product",
+    "audience",
+    "primary_task",
+    "mode",
+    "direction"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1,
+      "description": "Schema format version"
+    },
+    "product": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Name and core purpose of the product"
+    },
+    "audience": {
+      "type": "string",
+      "description": "Who uses the product and in what context"
+    },
+    "primary_task": {
+      "type": "string",
+      "description": "Observable outcome or action the user needs to achieve"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["create", "repair", "audit"],
+      "description": "Active operational mode"
+    },
+    "facts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicitly supplied facts and constraints from user or repo"
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Stated assumptions when information is non-essential"
+    },
+    "preserve": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Existing brand elements, colors, tokens, or behavior that must survive"
+    },
+    "direction": {
+      "type": "object",
+      "required": ["summary", "rationale"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "Chosen structural and visual approach"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this direction fits the product, audience, and content"
+        }
+      }
+    },
+    "token_source": {
+      "type": "string",
+      "description": "Reference to existing theme file, CSS tokens, or proposed system"
+    },
+    "responsive_rules": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Rules for viewport adaptation across mobile, tablet, and desktop"
+    },
+    "required_states": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicit UI states handled (e.g., loading, empty, error, active)"
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url_or_name", "principle", "what_not_to_copy"],
+        "properties": {
+          "url_or_name": { "type": "string" },
+          "type": { "type": "string", "enum": ["comparable_product", "adjacent_field", "subject_domain"] },
+          "principle": { "type": "string" },
+          "what_not_to_copy": { "type": "string" }
+        }
+      }
+    },
+    "rejected_options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["option", "reason"],
+        "properties": {
+          "option": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "performed": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "not_performed": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "outstanding": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

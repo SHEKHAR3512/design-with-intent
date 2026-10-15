@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/SHEKHAR3512/design-with-intent/main/schemas/findings.schema.json",
+  "title": "AuditFindings",
+  "description": "Validation schema for Design with Intent audit findings reports",
+  "type": "object",
+  "required": ["timestamp", "product", "mode", "summary", "findings"],
+  "properties": {
+    "timestamp": { "type": "string" },
+    "product": { "type": "string" },
+    "mode": { "type": "string", "enum": ["audit"] },
+    "summary": { "type": "string" },
+    "overall_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 4
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "severity", "category", "issue", "evidence", "recommendation"],
+        "properties": {
+          "id": { "type": "string" },
+          "severity": { "type": "string", "enum": ["blocker", "major", "minor", "cosmetic"] },
+          "category": { "type": "string", "enum": ["task_clarity", "brand_fit", "hierarchy", "responsiveness", "distinctiveness", "craft_accessibility"] },
+          "issue": { "type": "string" },
+          "evidence": { "type": "string" },
+          "element_selector_or_location": { "type": "string" },
+          "recommendation": { "type": "string" }
+        }
+      }
+    }
+  }
+}

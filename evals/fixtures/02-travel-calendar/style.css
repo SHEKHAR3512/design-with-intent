@@ -1,0 +1,661 @@
+/* AlpinePass Expeditions - Modern Accessible Design Tokens */
+:root {
+  /* Surfaces */
+  --surface-base: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-subtle: #f1f5f9;
+  --surface-selected: #ecfdf5;
+  --surface-in-range: #f0fdf4;
+  --surface-soldout: #f8fafc;
+
+  /* Brand & Accents */
+  --color-pine: #065f46;          /* 7.6:1 contrast against white */
+  --color-pine-hover: #047857;
+  --color-pine-dark: #022c22;
+  --color-granite: #0f172a;       /* 15.8:1 contrast against white */
+  --color-granite-muted: #475569; /* 5.4:1 contrast against white */
+  --color-border: #cbd5e1;
+  --color-border-subtle: #e2e8f0;
+
+  /* Status Colors (WCAG 2.2 AA compliant pairs) */
+  --status-available-badge: #065f46;
+  --status-available-bg: #d1fae5;
+  --status-low-badge: #92400e;    /* 5.1:1 on amber background */
+  --status-low-bg: #fef3c7;
+  --status-soldout-text: #64748b;
+  --status-soldout-bg: #f1f5f9;
+
+  /* Focus Indicator */
+  --focus-ring: #0284c7;
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Geometry */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--surface-base);
+  color: var(--color-granite);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.site-header {
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.header-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-granite);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.brand-icon {
+  color: var(--color-pine);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 9999px;
+  background: var(--surface-subtle);
+  color: var(--color-granite-muted);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.live-telemetry {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-pine);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-pine);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Main Container */
+.main-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-6) var(--space-8);
+}
+
+.hero-section {
+  margin-bottom: var(--space-6);
+}
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: var(--color-pine);
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+  letter-spacing: 0.02em;
+}
+
+.page-title {
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  font-weight: 800;
+  color: var(--color-granite);
+  line-height: 1.2;
+  margin-bottom: var(--space-2);
+}
+
+.page-subtitle {
+  font-size: 1.05rem;
+  color: var(--color-granite-muted);
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+/* Layout Grid */
+.booking-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (min-width: 992px) {
+  .booking-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+/* Cards */
+.calendar-card, .summary-card {
+  background: var(--surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Calendar Card */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.month-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-granite);
+}
+
+.legend-note {
+  font-size: 0.8125rem;
+  color: var(--color-granite-muted);
+}
+
+.month-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.ctrl-btn {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--color-granite);
+  transition: all 0.15s ease;
+}
+
+.ctrl-btn:hover:not(:disabled) {
+  background: var(--surface-subtle);
+  border-color: var(--color-granite-muted);
+}
+
+.ctrl-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.current-month-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0 var(--space-2);
+}
+
+/* Legend */
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  font-size: 0.8125rem;
+  color: var(--color-granite-muted);
+  font-weight: 500;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid var(--color-border);
+}
+
+.swatch-available {
+  background-color: var(--status-available-bg);
+  border-color: var(--status-available-badge);
+}
+
+.swatch-low {
+  background-color: var(--status-low-bg);
+  border-color: var(--status-low-badge);
+}
+
+.swatch-soldout {
+  background-color: var(--status-soldout-bg);
+  border-color: var(--color-border);
+}
+
+/* Calendar Table */
+.calendar-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: var(--space-6);
+}
+
+.weekday-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(38px, 1fr));
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-granite-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(38px, 1fr));
+  gap: var(--space-2);
+}
+
+/* Day Tile */
+.day-tile {
+  min-height: 74px;
+  background: var(--surface-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+  position: relative;
+  text-align: left;
+}
+
+.day-tile:hover:not(.sold-out):not(:disabled) {
+  border-color: var(--color-pine);
+  box-shadow: 0 2px 6px rgba(6, 95, 70, 0.12);
+  transform: translateY(-1px);
+}
+
+.day-tile.empty-pad {
+  background: transparent;
+  border-color: transparent;
+  cursor: default;
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.day-number {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-granite);
+}
+
+.day-price {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-granite-muted);
+}
+
+.day-status {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin-top: var(--space-1);
+  letter-spacing: 0.02em;
+}
+
+/* Status variants */
+.day-tile.status-available .day-status {
+  background: var(--status-available-bg);
+  color: var(--status-available-badge);
+}
+
+.day-tile.status-low {
+  border-color: #fde68a;
+}
+.day-tile.status-low .day-status {
+  background: var(--status-low-bg);
+  color: var(--status-low-badge);
+}
+
+.day-tile.sold-out {
+  background: var(--status-soldout-bg);
+  border-color: var(--color-border-subtle);
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.day-tile.sold-out .day-number,
+.day-tile.sold-out .day-price {
+  color: var(--status-soldout-text);
+  text-decoration: line-through;
+}
+
+.day-tile.sold-out .day-status {
+  background: #e2e8f0;
+  color: var(--status-soldout-text);
+}
+
+/* Selection State */
+.day-tile.selected-start,
+.day-tile.selected-end {
+  background: var(--color-pine) !important;
+  border-color: var(--color-pine-dark) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(6, 95, 70, 0.3);
+}
+
+.day-tile.selected-start .day-number,
+.day-tile.selected-start .day-price,
+.day-tile.selected-end .day-number,
+.day-tile.selected-end .day-price {
+  color: #ffffff !important;
+}
+
+.day-tile.selected-start .day-status,
+.day-tile.selected-end .day-status {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff !important;
+}
+
+.day-tile.in-stay-range {
+  background: var(--surface-in-range);
+  border-color: #86efac;
+}
+
+/* Keyboard Focus */
+.day-tile:focus-visible,
+.ctrl-btn:focus-visible,
+.btn-primary:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Cancellation Callout */
+.cancellation-callout {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-md);
+  color: var(--color-pine-dark);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.info-icon {
+  flex-shrink: 0;
+  color: var(--color-pine);
+  margin-top: 2px;
+}
+
+/* Summary Card */
+.summary-card {
+  position: sticky;
+  top: 90px;
+}
+
+.summary-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-granite);
+  margin-bottom: var(--space-4);
+}
+
+.stay-selection {
+  background: var(--surface-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.date-metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.metric-block {
+  flex: 1;
+}
+
+.metric-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-granite-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.metric-val {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-granite);
+}
+
+.arrow-divider {
+  font-size: 1.2rem;
+  color: var(--color-granite-muted);
+}
+
+.duration-badge {
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-pine);
+  background: #ffffff;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* Pricing Breakdown */
+.pricing-breakdown {
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-4);
+  margin-bottom: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: var(--color-granite-muted);
+}
+
+.price-row span:last-child {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--color-granite);
+}
+
+.total-row {
+  border-top: 2px solid var(--color-border);
+  padding-top: var(--space-3);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-granite) !important;
+}
+
+.total-row .total-amount {
+  font-size: 1.35rem;
+  color: var(--color-pine) !important;
+  font-weight: 800;
+}
+
+/* Button Primary */
+.btn-primary {
+  width: 100%;
+  min-height: 48px;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-pine);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  margin-bottom: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-pine-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background: #cbd5e1;
+  color: #64748b;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.guarantee-note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+  color: var(--color-granite-muted);
+  line-height: 1.4;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  background: var(--surface-card);
+  padding: var(--space-6);
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--color-granite-muted);
+  margin-top: var(--space-8);
+}
+
+.wcag-badge {
+  color: var(--color-pine);
+  font-weight: 600;
+  margin-top: var(--space-1);
+}
+
+/* Mobile Responsiveness Reflow */
+@media (max-width: 640px) {
+  .main-container {
+    padding: var(--space-4) var(--space-3);
+  }
+  .header-inner {
+    padding: var(--space-3);
+  }
+  .calendar-card, .summary-card {
+    padding: var(--space-4);
+  }
+  .day-tile {
+    min-height: 60px;
+    padding: 4px;
+  }
+  .day-number {
+    font-size: 0.8125rem;
+  }
+  .day-price {
+    font-size: 0.6875rem;
+  }
+  .day-status {
+    font-size: 0.6rem;
+    padding: 1px 2px;
+  }
+}
+
+/* Reduced Motion Safeguard */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

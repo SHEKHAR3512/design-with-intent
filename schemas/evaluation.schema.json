@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/SHEKHAR3512/design-with-intent/main/schemas/evaluation.schema.json",
+  "title": "BenchmarkEvaluation",
+  "description": "Validation schema for benchmark evaluation runs and scores",
+  "type": "object",
+  "required": [
+    "brief_id",
+    "condition",
+    "scores",
+    "weighted_score",
+    "hard_blockers"
+  ],
+  "properties": {
+    "brief_id": {
+      "type": "string",
+      "description": "ID of benchmark brief (e.g. brief-01-food-rescue)"
+    },
+    "condition": {
+      "type": "string",
+      "enum": ["baseline", "with_skill"]
+    },
+    "run_timestamp": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "scores": {
+      "type": "object",
+      "required": [
+        "task_clarity_completion",
+        "product_brand_fit",
+        "hierarchy_readability",
+        "responsive_resilience",
+        "appropriate_distinctiveness",
+        "craft_consistency"
+      ],
+      "properties": {
+        "task_clarity_completion": { "type": "number", "minimum": 0, "maximum": 4 },
+        "product_brand_fit": { "type": "number", "minimum": 0, "maximum": 4 },
+        "hierarchy_readability": { "type": "number", "minimum": 0, "maximum": 4 },
+        "responsive_resilience": { "type": "number", "minimum": 0, "maximum": 4 },
+        "appropriate_distinctiveness": { "type": "number", "minimum": 0, "maximum": 4 },
+        "craft_consistency": { "type": "number", "minimum": 0, "maximum": 4 }
+      }
+    },
+    "weighted_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 4
+    },
+    "hard_blockers": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "telemetry": {
+      "type": "object",
+      "properties": {
+        "turns": { "type": "number" },
+        "tool_calls": { "type": "number" },
+        "elapsed_seconds": { "type": "number" }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}

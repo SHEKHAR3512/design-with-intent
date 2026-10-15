@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlpinePass Expeditions — Glacier Hut Availability & Booking</title>
+  <meta name="description" content="Check live hut availability, mountain bed capacity, pricing, and cancellation policy for the Mont Blanc Haute Route.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <svg class="brand-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
+        </svg>
+        <span class="brand-name">AlpinePass Expeditions</span>
+      </div>
+      <nav class="site-nav" aria-label="Main Navigation">
+        <span class="badge elevation-badge">Elev. 2,750m</span>
+        <span class="status-indicator live-telemetry">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span>Live Hut Telemetry</span>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <div class="hero-section">
+      <div class="breadcrumb">Haute Route Traverse &gt; Sector 4 &gt; Cabane des Dix</div>
+      <h1 class="page-title">Cabane des Dix Availability Calendar</h1>
+      <p class="page-subtitle">
+        High-altitude mountain refuge with 16 heated bunk berths. All bookings include breakfast, four-course mountaineer dinner, and clean alpine water refilling.
+      </p>
+    </div>
+
+    <!-- Booking Layout Grid -->
+    <div class="booking-grid">
+      <!-- Calendar Panel -->
+      <section class="calendar-card" aria-labelledby="calendar-heading">
+        <div class="calendar-header">
+          <div>
+            <h2 id="calendar-heading" class="month-title">October 2026</h2>
+            <p class="legend-note">Prices include gear storage &amp; avalanche safety advisory</p>
+          </div>
+          <div class="month-controls">
+            <button type="button" class="ctrl-btn" id="prev-month-btn" aria-label="Previous month" disabled>&larr;</button>
+            <span class="current-month-label" aria-live="polite">Oct 2026</span>
+            <button type="button" class="ctrl-btn" id="next-month-btn" aria-label="Next month">&rarr;</button>
+          </div>
+        </div>
+
+        <!-- Status Legend -->
+        <div class="calendar-legend" role="region" aria-label="Availability Legend">
+          <div class="legend-item">
+            <span class="legend-swatch swatch-available" aria-hidden="true"></span>
+            <span>Available (5+ beds)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch swatch-low" aria-hidden="true"></span>
+            <span>Low Capacity (1–4 beds)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch swatch-soldout" aria-hidden="true"></span>
+            <span>Sold Out</span>
+          </div>
+        </div>
+
+        <!-- Calendar Table/Grid -->
+        <div class="calendar-table-wrap">
+          <div class="weekday-row" role="row">
+            <span role="columnheader">Mon</span>
+            <span role="columnheader">Tue</span>
+            <span role="columnheader">Wed</span>
+            <span role="columnheader">Thu</span>
+            <span role="columnheader">Fri</span>
+            <span role="columnheader">Sat</span>
+            <span role="columnheader">Sun</span>
+          </div>
+          <div class="days-grid" id="days-grid" role="grid" aria-label="October 2026 dates">
+            <!-- Populated via JavaScript with full accessibility & pricing attributes -->
+          </div>
+        </div>
+
+        <!-- Cancellation Notice -->
+        <aside class="cancellation-callout">
+          <svg class="info-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          <div class="cancellation-text">
+            <strong>Transparent Weather &amp; Cancellation Policy:</strong>
+            Full refund up to 14 days before check-in. Weather cancellations verified by Swiss Mountain Guides Association receive a 100% expedition voucher valid for 24 months.
+          </div>
+        </aside>
+      </section>
+
+      <!-- Reservation Summary Sidebar -->
+      <aside class="summary-card" aria-labelledby="summary-heading">
+        <h2 id="summary-heading" class="summary-title">Reservation Summary</h2>
+
+        <div class="stay-selection" id="stay-selection">
+          <div class="date-metric-row">
+            <div class="metric-block">
+              <span class="metric-label">Check-in</span>
+              <span class="metric-val" id="checkin-display">Select a date</span>
+            </div>
+            <div class="arrow-divider" aria-hidden="true">&rarr;</div>
+            <div class="metric-block">
+              <span class="metric-label">Check-out</span>
+              <span class="metric-val" id="checkout-display">Select a date</span>
+            </div>
+          </div>
+
+          <div class="duration-badge" id="duration-badge">
+            <span id="nights-count">0</span> nights selected
+          </div>
+        </div>
+
+        <!-- Price Breakdown -->
+        <div class="pricing-breakdown" id="pricing-breakdown">
+          <div class="price-row">
+            <span id="base-rate-label">Refuge Lodging (0 nights)</span>
+            <span id="base-rate-amount">$0</span>
+          </div>
+          <div class="price-row">
+            <span>Alpine Rescue &amp; Trail Maintenance Levy</span>
+            <span id="tax-amount">$0</span>
+          </div>
+          <div class="price-row total-row">
+            <span>Total (CHF / USD)</span>
+            <span class="total-amount" id="total-amount">$0</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn-primary" id="book-now-btn" disabled>
+          Select Dates to Reserve
+        </button>
+
+        <p class="guarantee-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Official Alpine Hut Registry #4092-VS. No hidden booking fees.
+        </p>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>&copy; 2026 AlpinePass Expeditions. Grounded in mountain safety, sustainability, and accessible trail preservation.</p>
+      <p class="wcag-badge">Verified WCAG 2.2 AA Contrast &amp; Keyboard Accessible</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

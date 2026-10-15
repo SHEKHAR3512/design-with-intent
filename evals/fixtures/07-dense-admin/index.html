@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PortOps — Freight &amp; Customs Terminal Manifest</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="terminal-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-badge">PORT-OPS</span>
+        <span class="brand-title">Terminal Berth 42 Manifest</span>
+      </div>
+      <div class="status-summary">
+        <span class="summary-stat">Active Vessels: <strong>3</strong></span>
+        <span class="summary-stat">Pending Clearance: <strong>14</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="manifest-container">
+    <div class="controls-bar">
+      <div>
+        <h1 class="page-title">Container Clearance Queue</h1>
+        <p class="page-subtitle">Inspect inbound manifests, customs holds, and gate pass clearances.</p>
+      </div>
+      <div class="filter-actions">
+        <label for="status-filter" class="visually-hidden">Filter by customs status</label>
+        <select id="status-filter" class="form-select">
+          <option value="all">All Statuses (128)</option>
+          <option value="hold">On Hold (6)</option>
+          <option value="cleared">Cleared (114)</option>
+        </select>
+        <button type="button" class="btn-primary-dense">Export Manifest CSV</button>
+      </div>
+    </div>
+
+    <!-- Responsive Manifest Table -->
+    <div class="manifest-table-wrap">
+      <table class="manifest-table">
+        <thead>
+          <tr>
+            <th scope="col">Container ID</th>
+            <th scope="col">Vessel</th>
+            <th scope="col">Origin</th>
+            <th scope="col">Gross Wt</th>
+            <th scope="col">Cargo Type</th>
+            <th scope="col">Customs Status</th>
+            <th scope="col">Discharge Date</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Container ID" class="mono-cell">MSCU-748921-0</td>
+            <td data-label="Vessel">MSC Gülsün</td>
+            <td data-label="Origin">Rotterdam (NLRTM)</td>
+            <td data-label="Gross Wt">24,180 kg</td>
+            <td data-label="Cargo Type">Electronics / Photovoltaic</td>
+            <td data-label="Customs Status"><span class="badge badge-cleared">&check; Cleared</span></td>
+            <td data-label="Discharge Date">Oct 15, 08:30</td>
+            <td data-label="Action"><button type="button" class="btn-action">Gate Pass</button></td>
+          </tr>
+          <tr>
+            <td data-label="Container ID" class="mono-cell">CMAU-918234-5</td>
+            <td data-label="Vessel">CMA CGM Palais</td>
+            <td data-label="Origin">Singapore (SGSIN)</td>
+            <td data-label="Gross Wt">31,420 kg</td>
+            <td data-label="Cargo Type">Automotive Sub-assemblies</td>
+            <td data-label="Customs Status"><span class="badge badge-hold">&excl; Hold: X-Ray Required</span></td>
+            <td data-label="Discharge Date">Oct 15, 09:15</td>
+            <td data-label="Action"><button type="button" class="btn-action btn-inspect">Inspect</button></td>
+          </tr>
+          <tr>
+            <td data-label="Container ID" class="mono-cell">HLCU-332901-8</td>
+            <td data-label="Vessel">Hapag Al Jmeliyah</td>
+            <td data-label="Origin">Hamburg (DEHAM)</td>
+            <td data-label="Gross Wt">18,650 kg</td>
+            <td data-label="Cargo Type">Pharmaceutical Cold Chain</td>
+            <td data-label="Customs Status"><span class="badge badge-cleared">&check; Cleared</span></td>
+            <td data-label="Discharge Date">Oct 15, 10:00</td>
+            <td data-label="Action"><button type="button" class="btn-action">Gate Pass</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

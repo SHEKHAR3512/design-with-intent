@@ -1,0 +1,22 @@
+---
+description: Design with Intent Cursor Rule - enforce product-grounded design, brand preservation, and WCAG 2.2 AA accessibility.
+globs: **/*.{html,css,tsx,jsx,vue,svelte}
+alwaysApply: false
+---
+
+# Design with Intent — Cursor Rule
+
+When generating, repairing, or auditing web UI:
+
+1. **The Central Rule:** Every major design choice must have a concrete reason connected to the product, audience, content, or medium. Do not replace purple with generic beige/serif.
+2. **Mode Routing:**
+   - **Create:** Establish brief, compare 2 directions, define tokens, implement representative slice.
+   - **Repair:** Preserve existing brand colors (e.g. purple, blue) and working business logic. Make the smallest coherent changes.
+   - **Audit:** Provide prioritized findings with objective contrast/viewport evidence; do not edit code unless requested.
+3. **Accessibility Baseline (WCAG 2.2 AA):**
+   - Text contrast >= 4.5:1 (normal) or >= 3.0:1 (large text).
+   - Target sizes >= 24×24 CSS px (recommend 44px on mobile).
+   - Never communicate status by color alone (pair with text or icon).
+   - Visible keyboard `:focus-visible` indicators.
+4. **Responsive Reflow:** Check 320px width reflow without horizontal scrolling.
+5. **Project Memory:** Record decisions and rejected options in `DESIGN.md`.

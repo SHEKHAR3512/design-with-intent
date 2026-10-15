@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniMetrics Cloud — Cluster Observability</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-logo" aria-hidden="true">&#9670;</span>
+        <span class="brand-title">OmniMetrics <strong>Cloud</strong></span>
+      </div>
+      <nav class="nav-links" aria-label="System navigation">
+        <a href="#clusters" class="nav-item active" aria-current="page">Clusters</a>
+        <a href="#traces" class="nav-item">Traces</a>
+        <a href="#alerts" class="nav-item">Alerts <span class="badge-count">2</span></a>
+      </nav>
+      <div class="user-profile">
+        <span class="org-tag">us-east-prod</span>
+        <button type="button" class="btn-purple-sm" aria-label="Deploy new cluster">+ New Cluster</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Cluster: primary-us-east-k8s</h1>
+        <p class="page-desc">Production telemetry &amp; node load balancing. Brand Invariant: Purple System Tokens.</p>
+      </div>
+      <div class="action-bar">
+        <button type="button" class="btn-secondary" id="refresh-btn">&#8635; Refresh Metrics</button>
+        <button type="button" class="btn-purple-primary" id="scale-btn">Scale Replicas</button>
+      </div>
+    </div>
+
+    <!-- Telemetry Cards Grid -->
+    <section class="telemetry-grid" aria-label="Cluster Performance Metrics">
+      <article class="metric-card">
+        <div class="metric-head">
+          <span class="metric-title">P99 Latency</span>
+          <span class="status-badge status-normal">Healthy</span>
+        </div>
+        <div class="metric-value">28.4 <span class="unit">ms</span></div>
+        <div class="metric-delta positive">&darr; 4.2ms vs last hour</div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-head">
+          <span class="metric-title">Error Rate</span>
+          <span class="status-badge status-normal">0.02%</span>
+        </div>
+        <div class="metric-value">0.02 <span class="unit">%</span></div>
+        <div class="metric-delta positive">&check; Within SLA (&lt; 0.1%)</div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-head">
+          <span class="metric-title">CPU Saturation</span>
+          <span class="status-badge status-warning">Elevated</span>
+        </div>
+        <div class="metric-value">74.6 <span class="unit">%</span></div>
+        <div class="metric-delta warning">&uarr; 12% auto-scaling threshold</div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-head">
+          <span class="metric-title">Active Pods</span>
+          <span class="status-badge status-purple">32 / 32</span>
+        </div>
+        <div class="metric-value">32 <span class="unit">nodes</span></div>
+        <div class="metric-delta neutral">Target: 32 pods online</div>
+      </article>
+    </section>
+
+    <!-- Cluster Nodes Table -->
+    <section class="table-section" aria-label="Worker Node Pool">
+      <h2 class="section-title">Worker Node Pool (us-east-1a)</h2>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Node ID</th>
+              <th scope="col">Zone</th>
+              <th scope="col">Kernel</th>
+              <th scope="col">CPU</th>
+              <th scope="col">Memory</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono-cell">node-worker-a1-94</td>
+              <td>us-east-1a</td>
+              <td>Linux 6.8.0</td>
+              <td>64%</td>
+              <td>14.2 / 32 GB</td>
+              <td><span class="status-pill green">Ready</span></td>
+              <td><button type="button" class="btn-table-action">Drain</button></td>
+            </tr>
+            <tr>
+              <td class="mono-cell">node-worker-a1-95</td>
+              <td>us-east-1a</td>
+              <td>Linux 6.8.0</td>
+              <td>78%</td>
+              <td>24.8 / 32 GB</td>
+              <td><span class="status-pill green">Ready</span></td>
+              <td><button type="button" class="btn-table-action">Drain</button></td>
+            </tr>
+            <tr>
+              <td class="mono-cell">node-worker-a1-96</td>
+              <td>us-east-1b</td>
+              <td>Linux 6.8.0</td>
+              <td>92%</td>
+              <td>29.1 / 32 GB</td>
+              <td><span class="status-pill amber">High Load</span></td>
+              <td><button type="button" class="btn-table-action">Inspect</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "name": "design-with-intent",
+  "version": "1.0.0",
+  "description": "A portable agent skill and evaluation framework that produces purposeful, distinctive design with intent.",
+  "type": "module",
+  "main": "skills/design-with-intent/SKILL.md",
+  "scripts": {
+    "validate": "node skills/design-with-intent/scripts/validate-skill.js",
+    "contrast": "node skills/design-with-intent/scripts/check-contrast.js",
+    "test": "node tools/runner.js",
+    "package": "node tools/package-skill.js",
+    "eval:run": "node tools/runner.js"
+  },
+  "keywords": [
+    "ai-agent",
+    "agent-skills",
+    "design",
+    "ui-ux",
+    "design-system",
+    "accessibility",
+    "wcag",
+    "antigravity",
+    "claude-code",
+    "cursor"
+  ],
+  "author": "SHEKHAR JAAT <SHEKHAR3512@users.noreply.github.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
