@@ -1,6 +1,6 @@
 {
   "name": "design-with-intent",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A portable agent skill and evaluation framework that produces purposeful, distinctive design with intent.",
   "type": "module",
   "main": "index.js",
