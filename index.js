@@ -69,6 +69,17 @@ export function getDesignRecordTemplate(overrides = {}) {
   const audience = overrides.audience || 'Target users';
   const primaryTask = overrides.primary_task || 'Primary user outcome';
   const mode = overrides.mode || 'create';
+  const preserve = Array.isArray(overrides.preserve)
+    ? overrides.preserve
+    : (overrides.preserve ? [overrides.preserve] : []);
+
+  const preserveYaml = preserve.length > 0
+    ? '\n' + preserve.map(item => `  - "${item}"`).join('\n')
+    : ' []';
+
+  const summary = overrides.direction_summary || (overrides.direction && overrides.direction.summary) || 'Purposeful visual approach';
+  const rationale = overrides.direction_rationale || (overrides.direction && overrides.direction.rationale) || 'Why this direction fits the product and audience';
+  const tokenSource = overrides.token_source || 'src/styles/tokens.css';
 
   return `---
 schema_version: 1
@@ -79,13 +90,13 @@ mode: "${mode}"
 
 facts: []
 assumptions: []
-preserve: []
+preserve:${preserveYaml}
 
 direction:
-  summary: "Purposeful visual approach"
-  rationale: "Why this direction fits the product and audience"
+  summary: "${summary}"
+  rationale: "${rationale}"
 
-token_source: "src/styles/tokens.css"
+token_source: "${tokenSource}"
 responsive_rules:
   - "320px–480px: Single-column reflow without horizontal scroll"
   - "768px+: Multi-column layout"
@@ -107,3 +118,6 @@ verification:
 # Design Decisions
 `;
 }
+
+export { runInteractiveWizard } from './bin/wizard.js';
+

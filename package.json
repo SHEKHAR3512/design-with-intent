@@ -1,6 +1,6 @@
 {
   "name": "design-with-intent",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A portable agent skill and evaluation framework that produces purposeful, distinctive design with intent.",
   "type": "module",
   "main": "index.js",
@@ -20,11 +20,13 @@
     "LICENSE"
   ],
   "scripts": {
+    "wizard": "node bin/cli.js wizard",
     "validate": "node skills/design-with-intent/scripts/validate-skill.js",
     "contrast": "node skills/design-with-intent/scripts/check-contrast.js",
     "test": "node tools/runner.js",
     "package": "node tools/package-skill.js",
     "eval:run": "node tools/runner.js",
+    "release": "node tools/release.js",
     "prepublishOnly": "node tools/runner.js && node skills/design-with-intent/scripts/validate-skill.js"
   },
   "repository": {

@@ -1,10 +1,13 @@
 # Design with Intent
 
-> **A portable agent skill and evaluation framework that produces purposeful, distinctive design.**
+> **A portable agent skill, evaluation framework, and interactive design CLI for AI coding agents.**
 
-[![Validation](https://img.shields.io/badge/skill-validated-emerald.svg)](./skills/design-with-intent/SKILL.md)
-[![WCAG 2.2 AA](https://img.shields.io/badge/accessibility-WCAG%202.2%20AA-blue.svg)](./skills/design-with-intent/references/web.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![npm version](https://img.shields.io/npm/v/design-with-intent.svg?color=cb3837&style=flat-square)](https://www.npmjs.com/package/design-with-intent)
+[![GitHub Release](https://img.shields.io/github/v/release/SHEKHAR3512/design-with-intent?color=2563eb&style=flat-square)](https://github.com/SHEKHAR3512/design-with-intent/releases)
+[![npm downloads](https://img.shields.io/npm/dm/design-with-intent.svg?style=flat-square)](https://www.npmjs.com/package/design-with-intent)
+[![Validation](https://img.shields.io/badge/skill-validated-emerald.svg?style=flat-square)](./skills/design-with-intent/SKILL.md)
+[![WCAG 2.2 AA](https://img.shields.io/badge/accessibility-WCAG%202.2%20AA-blue.svg?style=flat-square)](./skills/design-with-intent/references/web.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](./LICENSE)
 
 ---
 
@@ -116,12 +119,27 @@ verification:
 
 ---
 
-## 4. Quickstart & CLI Usage
+## 4. Interactive Wizard & Quickstart
 
-Install and run instantly using `npx`:
+Run directly without installing using `npx`:
 
 ```bash
-# 1. Install skill into your current project (detects Antigravity, Claude Code, or Cursor)
+# Launch the full Interactive Setup & Design Wizard:
+npx design-with-intent
+```
+
+The interactive wizard guides you through:
+1. 🚀 **Target Agent Selection**: Installs skill into Google Antigravity, Claude Code, or Cursor.
+2. 📝 **Guided DESIGN.md Creation**: Customizes product name, target audience, primary tasks, and brand invariants.
+3. 🎨 **Interactive Contrast Tester**: Real-time WCAG 2.2 AA/AAA evaluation with visual pass/fail meters.
+4. 📱 **Interactive Touch Target Evaluator**: Evaluates touch button sizes for mobile standards.
+5. 🔍 **Workspace Health Scorecard**: Inspects your project for installed agent rules, schemas, and design tokens.
+6. 📖 **AI Agent Prompt Cheat Sheet**: Ready-to-copy prompts for Create, Repair, and Audit modes.
+
+### Direct CLI Commands
+
+```bash
+# 1. Non-interactive install into your current project
 npx design-with-intent install
 
 # Or target a specific host agent:
@@ -142,7 +160,7 @@ npx design-with-intent target-size 48 48
 ### Programmatic Library Usage
 
 ```typescript
-import { calculateContrast, checkTargetSize, getSkillPath, getSkillContent } from 'design-with-intent';
+import { calculateContrast, checkTargetSize, getSkillPath, getSkillContent, runInteractiveWizard } from 'design-with-intent';
 
 // Calculate WCAG 2.2 contrast ratio
 const contrast = calculateContrast('#6D28D9', '#FFFFFF');
@@ -156,22 +174,27 @@ console.log(target.status); // "EXCELLENT"
 
 ---
 
-## 5. Publishing to npm
+## 5. Releases & GitHub Package Integration
 
-### Option A: Direct Terminal Publish
+Releases are connected directly between the GitHub repository and npm registry.
+
+### Automated Release Command
+
+Run the automated release pipeline to test, package, create GitHub Releases with assets, and publish to npm in one command:
+
 ```bash
-# 1. Authenticate with your npm account (one-time setup)
-npm login
-
-# 2. Publish to the public npm registry
-npm publish --access public
+npm run release
 ```
 
-### Option B: Automated GitHub Actions
-A GitHub Actions workflow is included at [`.github/workflows/publish.yml`](./.github/workflows/publish.yml):
-1. Create an Access Token on [npmjs.com](https://www.npmjs.com) (Access Tokens -> Generate New Token -> Automation).
-2. Add it as a secret named `NPM_TOKEN` in your GitHub repository settings (*Settings -> Secrets and variables -> Actions*).
-3. Draft and publish a Release on GitHub—the workflow automatically tests and publishes the package to npm!
+This automatically:
+1. Executes the 26-point verification test suite (`npm test` and `npm run validate`).
+2. Builds the `.tgz` npm package artifact.
+3. Tags the commit (e.g. `v1.0.2`).
+4. Creates a published **GitHub Release** with changelog and attached `.tgz` package.
+5. Publishes the release to the public **npm registry** with provenance.
+
+### CI/CD Workflow
+A GitHub Actions workflow is included at [`.github/workflows/publish.yml`](./.github/workflows/publish.yml). Pushing any tag (`git push origin v*`) or publishing a release on GitHub automatically builds, attaches release artifacts, and publishes to npm.
 
 ---
 

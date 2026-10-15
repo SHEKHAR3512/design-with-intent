@@ -28,4 +28,10 @@ export function getDesignRecordTemplate(overrides?: {
   audience?: string;
   primary_task?: string;
   mode?: 'create' | 'repair' | 'audit';
+  preserve?: string | string[];
+  direction_summary?: string;
+  direction_rationale?: string;
+  token_source?: string;
 }): string;
+
+export function runInteractiveWizard(): Promise<void>;

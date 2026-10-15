@@ -9,13 +9,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { calculateContrast, checkTargetSize, getSkillDir, getDesignRecordTemplate } from '../index.js';
+import { runInteractiveWizard } from './wizard.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootPkgDir = path.resolve(__dirname, '..');
 
 const args = process.argv.slice(2);
-const command = args[0] ? args[0].toLowerCase() : 'help';
+const command = args[0] ? args[0].toLowerCase() : (process.stdin.isTTY ? 'wizard' : 'help');
 
 function copyDirRecursive(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
@@ -38,8 +39,12 @@ function showHelp() {
 \x1b[1mDesign with Intent\x1b[0m — Portable Agent Skill & Design Tooling
 
 \x1b[36mUSAGE:\x1b[0m
-  $ npx design-with-intent <command> [options]
-  $ dwi <command> [options]
+  $ npx design-with-intent [command] [options]
+  $ dwi [command] [options]
+
+\x1b[35mINTERACTIVE WIZARD:\x1b[0m
+  $ npx design-with-intent        \x1b[32mLaunch interactive setup & design wizard\x1b[0m
+  $ dwi wizard                    \x1b[32mInteractive menu (contrast, targets, health)\x1b[0m
 
 \x1b[36mCOMMANDS:\x1b[0m
   \x1b[1minstall\x1b[0m [target]        Install the skill into your project or environment
@@ -47,10 +52,12 @@ function showHelp() {
   \x1b[1mrecord\x1b[0m                  Create a canonical DESIGN.md decision record in current directory
   \x1b[1mcontrast\x1b[0m <fg> <bg>      Calculate WCAG 2.2 AA contrast ratio between two hex/rgb colors
   \x1b[1mtarget-size\x1b[0m <w> <h>     Verify target dimensions against WCAG 2.2 AA (>= 24px)
+  \x1b[1mwizard\x1b[0m                  Launch the interactive terminal wizard
   \x1b[1mvalidate\x1b[0m                Validate the skill files or current directory DESIGN.md
   \x1b[1mhelp\x1b[0m                    Show this help message
 
 \x1b[36mEXAMPLES:\x1b[0m
+  $ npx design-with-intent
   $ npx design-with-intent install antigravity
   $ npx design-with-intent install claude
   $ npx design-with-intent install cursor
@@ -191,9 +198,23 @@ function cmdTargetSize() {
 
 // Router
 switch (command) {
+  case 'wizard':
+  case 'interactive':
+  case '-i':
+  case '--interactive':
+  case 'setup':
+  case 'ui':
+    await runInteractiveWizard();
+    break;
   case 'install':
-  case 'init':
     cmdInstall(args[1]);
+    break;
+  case 'init':
+    if (!args[1] && process.stdin.isTTY) {
+      await runInteractiveWizard();
+    } else {
+      cmdInstall(args[1]);
+    }
     break;
   case 'record':
     cmdRecord();
