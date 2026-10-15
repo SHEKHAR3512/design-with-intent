@@ -116,26 +116,62 @@ verification:
 
 ---
 
-## 4. Quickstart & Installation
+## 4. Quickstart & CLI Usage
 
-### Google Antigravity IDE
-To install into your active Antigravity workspace:
+Install and run instantly using `npx`:
+
 ```bash
-mkdir -p .agents/skills
-cp -r skills/design-with-intent .agents/skills/
+# 1. Install skill into your current project (detects Antigravity, Claude Code, or Cursor)
+npx design-with-intent install
+
+# Or target a specific host agent:
+npx design-with-intent install antigravity
+npx design-with-intent install claude
+npx design-with-intent install cursor
+
+# 2. Initialize a canonical DESIGN.md decision record
+npx design-with-intent record
+
+# 3. Check WCAG 2.2 AA contrast between two colors
+npx design-with-intent contrast "#6D28D9" "#FFFFFF"
+
+# 4. Verify touch target dimensions (>= 24px)
+npx design-with-intent target-size 48 48
 ```
 
-### Claude Code
-```bash
-mkdir -p .claude/skills
-cp -r skills/design-with-intent .claude/skills/
+### Programmatic Library Usage
+
+```typescript
+import { calculateContrast, checkTargetSize, getSkillPath, getSkillContent } from 'design-with-intent';
+
+// Calculate WCAG 2.2 contrast ratio
+const contrast = calculateContrast('#6D28D9', '#FFFFFF');
+console.log(contrast.ratio); // 7.1
+console.log(contrast.normalTextAA); // true
+
+// Check touch target size (minimum 24px, recommended 44px)
+const target = checkTargetSize(48, 48, true);
+console.log(target.status); // "EXCELLENT"
 ```
 
-### Cursor
+---
+
+## 5. Publishing to npm
+
+### Option A: Direct Terminal Publish
 ```bash
-mkdir -p .cursor/rules
-cp adapters/cursor/design-with-intent.mdc .cursor/rules/
+# 1. Authenticate with your npm account (one-time setup)
+npm login
+
+# 2. Publish to the public npm registry
+npm publish --access public
 ```
+
+### Option B: Automated GitHub Actions
+A GitHub Actions workflow is included at [`.github/workflows/publish.yml`](./.github/workflows/publish.yml):
+1. Create an Access Token on [npmjs.com](https://www.npmjs.com) (Access Tokens -> Generate New Token -> Automation).
+2. Add it as a secret named `NPM_TOKEN` in your GitHub repository settings (*Settings -> Secrets and variables -> Actions*).
+3. Draft and publish a Release on GitHub—the workflow automatically tests and publishes the package to npm!
 
 ---
 

@@ -3,28 +3,56 @@
   "version": "1.0.0",
   "description": "A portable agent skill and evaluation framework that produces purposeful, distinctive design with intent.",
   "type": "module",
-  "main": "skills/design-with-intent/SKILL.md",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "design-with-intent": "./bin/cli.js",
+    "dwi": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "skills",
+    "adapters",
+    "schemas",
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "validate": "node skills/design-with-intent/scripts/validate-skill.js",
     "contrast": "node skills/design-with-intent/scripts/check-contrast.js",
     "test": "node tools/runner.js",
     "package": "node tools/package-skill.js",
-    "eval:run": "node tools/runner.js"
+    "eval:run": "node tools/runner.js",
+    "prepublishOnly": "node tools/runner.js && node skills/design-with-intent/scripts/validate-skill.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SHEKHAR3512/design-with-intent.git"
   },
   "keywords": [
     "ai-agent",
     "agent-skills",
     "design",
-    "ui-ux",
     "design-system",
+    "ui-ux",
     "accessibility",
     "wcag",
     "antigravity",
     "claude-code",
-    "cursor"
+    "cursor",
+    "codex"
   ],
   "author": "SHEKHAR JAAT <SHEKHAR3512@users.noreply.github.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SHEKHAR3512/design-with-intent/issues"
+  },
+  "homepage": "https://github.com/SHEKHAR3512/design-with-intent#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18.0.0"
   }
