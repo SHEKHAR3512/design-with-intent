@@ -4,6 +4,7 @@ coverage/
 .DS_Store
 *.log
 *.tar.gz
+*.tgz
 *.zip
 .env
 .env.local
