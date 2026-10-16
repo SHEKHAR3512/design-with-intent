@@ -1,0 +1,56 @@
+[
+  {
+    "id": "field-notes", "name": "Field notes",
+    "context": "Field research, outdoor services, environmental observations",
+    "layout": "Map or field image beside an observation log; group entries by place and time instead of identical cards.",
+    "typography": "Humanist sans for controls; sturdy serif for narrative headings; tabular numerals for measurements.",
+    "colors": { "surface": "#F4F7EF", "text": "#203328", "muted": "#51604D", "action": "#315D3E", "onAction": "#FFFFFF", "accent": "#A64924" },
+    "signature": "A location marker and time-stamped observation rail connected to real data.",
+    "avoid": "Decorative map grids without geographic meaning."
+  },
+  {
+    "id": "signal-desk", "name": "Signal desk",
+    "context": "Operational consoles, telemetry, developer tools",
+    "layout": "Compact status rail, large active workspace, and a persistent event list; group by urgency and time.",
+    "typography": "Neutral sans for navigation; monospace only for identifiers, code, and numeric readouts.",
+    "colors": { "surface": "#101A29", "text": "#EDF3FC", "muted": "#A9BACF", "action": "#A8DBF8", "onAction": "#102136", "accent": "#F2B66D" },
+    "signature": "A live event timeline with clear severity labels and inspectable details.",
+    "avoid": "Neon glows, fake terminal text, and decorative charts."
+  },
+  {
+    "id": "culture-poster", "name": "Culture poster",
+    "context": "Festivals, exhibitions, music, cultural programs",
+    "layout": "Expressive typographic masthead paired with a real program or venue image; a readable schedule anchors the page.",
+    "typography": "Condensed display for event identity with an open, legible sans for dates and booking controls.",
+    "colors": { "surface": "#FFF4E8", "text": "#382126", "muted": "#6F4D50", "action": "#9C2340", "onAction": "#FFFFFF", "accent": "#3E568F" },
+    "signature": "Oversized event typography tied to actual dates and venue information.",
+    "avoid": "Unreadable text overlap and invented sponsor logos."
+  },
+  {
+    "id": "workshop", "name": "Workshop",
+    "context": "Manufacturing, logistics, professional equipment",
+    "layout": "Strong horizontal bands, aligned specifications, and a task-oriented workbench with explicit units.",
+    "typography": "Sturdy grotesk headings and readable sans body; tabular numerals for quantities.",
+    "colors": { "surface": "#F0F2F3", "text": "#222B31", "muted": "#52616C", "action": "#315474", "onAction": "#FFFFFF", "accent": "#985014" },
+    "signature": "A specification rail or annotated equipment image that helps a real decision.",
+    "avoid": "Warning stripes as decoration and tiny technical labels."
+  },
+  {
+    "id": "gallery", "name": "Gallery",
+    "context": "Architecture, photography, portfolios, visual catalogs",
+    "layout": "Image-led sequence with deliberate changes in image scale, clear captions, and quiet navigation.",
+    "typography": "One restrained sans family with strong size contrast; captions remain readable at small viewports.",
+    "colors": { "surface": "#FAFAF8", "text": "#25272B", "muted": "#62666B", "action": "#334F86", "onAction": "#FFFFFF", "accent": "#805236" },
+    "signature": "A project image sequence whose crops and pacing tell the work's story.",
+    "avoid": "Huge empty spaces when no useful imagery exists."
+  },
+  {
+    "id": "public-service", "name": "Public service",
+    "context": "Applications, appointments, education, essential services",
+    "layout": "Task-first heading, bounded form width, clear progress, and a contextual help rail; prioritize comprehension.",
+    "typography": "Accessible system sans with generous line height; clear text labels and a modest heading scale.",
+    "colors": { "surface": "#F4F8FC", "text": "#152D47", "muted": "#4E6276", "action": "#205493", "onAction": "#FFFFFF", "accent": "#795118" },
+    "signature": "A plain-language checklist showing what users need before starting.",
+    "avoid": "Showy animation, vague CTA copy, and hiding eligibility requirements."
+  }
+]

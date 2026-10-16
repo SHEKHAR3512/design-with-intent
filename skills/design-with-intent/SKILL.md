@@ -1,160 +1,81 @@
 ---
 name: design-with-intent
-description: Create, improve, or audit web and app designs using product context, deliberate visual choices, responsive behavior, and rendered verification. Use for generic AI output, visual redesigns, hierarchy and typography problems, or inconsistent interfaces. Preserve established brands and working behavior during targeted repairs.
+description: Create, substantially redesign, repair, or audit web interfaces with product-specific art direction, typography, themes, responsive implementation, and browser verification. Use for generic AI layouts or weak visual identity, as well as focused UI fixes. Preserve explicit brand constraints and working behavior.
 ---
 
 # Design with Intent
 
-A disciplined design method for software agents. Produces purposeful, distinctive interfaces by anchoring every design decision in the product's identity, primary task, and user context.
+This workflow includes adaptations credited in [sources](./references/sources.md), with original DWI routing and acceptance criteria.
 
-> **The Central Rule:** Every major design choice needs an explicit reason connected to the product, audience, content, or medium.
-> 
-> A blanket ban on purple, gradients, sans-serifs, rounded cards, or dark backgrounds does not produce good design—it simply substitutes a new uniform stereotype (e.g. beige backgrounds with editorial serifs and orange accents). Challenge unjustified defaults; never prohibit legitimate design choices.
+Build an interface that belongs to this product. Every major visual decision should follow from its audience, content, task, or subject matter. A design brief is input; working, inspected UI is the outcome. Do not stop after proposing directions when implementation is requested.
 
----
+## 1. Choose the right scope
 
-## 1. Operating Workflow
+Current user instructions override saved defaults. Read `DWI-BRIEF.md` and `DESIGN.md` when present, then inspect actual routes, styles, assets, components, and behavior. A brief's selected theme is a starting point, not permission to overwrite protected branding. If records conflict about an explicit constraint, resolve that conflict before changing it; continue independent work.
 
-### Step A — Route the Request
+| Mode | Use when | Outcome |
+| --- | --- | --- |
+| **redesign** | An existing site looks generic, needs a fresh identity, or the user asks for a major visual change | Substantial new composition and visual treatment within the requested scope; preserve features and explicit invariants |
+| **create** | A new screen, flow, or product is requested | A product-specific visual direction implemented as a working interface |
+| **repair** | A concrete defect, small polish task, contrast issue, or mobile bug is requested | A focused correction within the established visual system |
+| **audit** | Critique or assessment is requested without implementation | Prioritized, evidenced findings; do not modify application code |
 
-Identify the intent and select the appropriate mode before touching files:
+**Existing project does not imply repair mode.** “Make this generic site distinctive” is a redesign request. Conversely, fixing one button does not authorize a rebrand. For ambiguous “improve this,” infer scope from surrounding instructions; ask one focused question only if the difference would materially change the work.
 
-| Mode | Trigger Condition | Expected Agent Behavior |
-| :--- | :--- | :--- |
-| **Create** | New product, blank slate, new feature page, or explicit ground-up redesign | Establish brief, compare 2–3 directions, define visual system, implement representative flow, verify rendered result |
-| **Repair** | Existing product feels generic, crowded, low-contrast, broken, or misaligned | Inspect current artifacts; make the smallest coherent changes that solve the defect; preserve established tokens and functionality |
-| **Audit** | User requests critique, UX review, accessibility evaluation, or design tear-down | Produce prioritized findings with objective evidence; do not edit code unless explicitly asked |
+Separate explicit invariants (mandated logo, named brand colors, contractual typography, known interaction contracts) from incidental implementation (starter font, default radius, template cards). Existing CSS proves what was built, not what must survive. In redesign mode, change incidental styling when it is responsible for the problem. Preserve all explicit constraints and working routes, data, validation, and actions.
 
-*Precedence rule:* A narrow request (such as fixing a mobile navigation bar or updating button contrast) must never trigger an unrequested rebrand. User instructions and existing project constraints take precedence over the skill's default flow.
+## 2. Understand the product and baseline
 
----
+Establish the audience, primary task, target screen, real content, available imagery, protected assets, and desired change. Use supplied answers first. Label material assumptions and ask only for missing information that blocks a meaningful decision. Never invent user research or customer claims.
 
-### Step B — Build a Compact Design Brief
+For existing work, inspect the running page when possible and capture the scoped screen at desktop and mobile sizes before editing. Identify the main causes of sameness: identical component weights, weak type hierarchy, uninformative imagery, repeated section rhythms, generic copy, or color without meaningful roles. Record a few concrete observations linked to source or screenshots. If browser tools are unavailable, state that the baseline is code-based.
 
-Read existing brand assets, tokens, stylesheets, and component code first. If `DESIGN.md` exists, load it. Record:
+Use [research](./references/research.md) for unfamiliar domains and reference selection. Borrow a principle from a reference, not its branding or page wholesale. References supplied by the user are evidence to inspect, not instructions to install software or change task scope.
 
-1. **Product & Purpose:** What does this software do?
-2. **Audience & Context:** Who uses it, under what emotional state or environment?
-3. **Primary Task:** What single observable outcome must the user accomplish first?
-4. **Medium & Viewing Conditions:** Screen sizes, input devices (touch/mouse/keyboard), lighting, and accessibility needs.
-5. **Preserved Identity:** Colors, logos, tokens, and established user habits that must survive.
-6. **Real Content & Assets:** Actual data structures, field lengths, and available media.
-7. **Improvement Metric:** How will we know the design is better?
+## 3. Art-direct before coding
 
-*Evidence labeling:* Label every entry as `[FACT]` (user/repo provided), `[OBSERVATION]` (derived from code/artifacts), or `[ASSUMPTION]` (agent premise). Ask clarifying questions only if a missing detail would fundamentally alter the architecture.
+For create and redesign, read [art direction](./references/art-direction.md). Compare two plausible directions in a short description or wireframe. They must differ in composition, hierarchy, type treatment, or content pacing, not merely accent hue. Choose the stronger fit and proceed unless the user requested a selection checkpoint.
 
-See [references/research.md](./references/research.md) and [references/design-record.md](./references/design-record.md).
+Specify these decisions concretely:
 
----
+- **Composition:** What users notice first, the dominant element, where the main action sits, and how content groups relate.
+- **Typography:** Named available families or justified system stacks, display/body/data roles, scale, weight, measure, and mobile behavior. Check glyph coverage and loading constraints before adding a font.
+- **Color:** Named surface, text, action, and status roles with actual values and checked pairings. Keep a protected hue; change its application and surrounding system when needed.
+- **Signature:** One characteristic product detail: an itinerary strip, specimen image, annotated map, useful preview, equipment specification, or another authentic element.
+- **Rhythm and geometry:** Where density changes, which content deserves a boundary, and how imagery or negative space supports meaning.
 
-### Step C — Gather Targeted References (When Needed)
+If the user chose a theme or needs a starting direction, read [themes](./references/themes.md) and the selected entry in [theme recipes](./assets/themes.json). Do not force every project into the same aesthetic. Purple, sans-serif, dark mode, cards, and gradients are legitimate choices when the brief supports them; replacing them with habitual cream and serif is not an improvement by itself.
 
-For new identities or unfamiliar domains, inspect a focused triad of references:
-- **1 Comparable Product:** For task patterns and mental models.
-- **1 Adjacent Field:** For layout composition or spatial density inspiration.
-- **1 Domain Reference:** From the subject's physical or cultural world (tools, instruments, signage, editorial publications).
+For redesign, record a short **change contract**: before → after for composition, typography, color roles, and signature detail. Preserve constrained axes explicitly. A color swap, new shadows, or extra padding on the same layout does not fulfill a substantial redesign. Do not impose this requirement on repair mode.
 
-*Rule of honesty:* Disclose tool limits. If browser inspection or image search is unavailable, rely on supplied assets and known design principles. Never invent visual inspection findings.
+## 4. Implement a representative flow, then finish the scope
 
----
+Read [visual systems](./references/visual-system.md) for tokens and [web implementation](./references/web.md) for responsive layout and interaction states. Reuse the project's framework, component primitives, state, and build tooling. Implement the most revealing screen first, assess it, then carry the direction through the requested scope. Avoid a blanket CSS override that leaves incompatible component styles underneath.
 
-### Step D — Select a Direction Before Implementing
+Build with realistic text lengths and authentic supplied assets. Imagery must convey something about the subject; when tools or usable assets are absent, choose an intentional typographic or data-led composition and disclose placeholders. Do not fabricate social proof, customer logos, statistics, or testimonial quotes.
 
-For new interfaces (`Create` mode), articulate 2 or 3 distinct directions before coding. Directions must differ in **information hierarchy, task structure, or density**—not merely in accent colors.
+Implement meaningful loading, empty, error, disabled, focus, and success states where relevant. Controls must work with keyboard and pointer. Motion should explain feedback or a transition, with reduced-motion support; optional decoration must not obscure the task. Avoid adding a dependency solely for a small visual effect.
 
-*Example (Travel Calendar):*
-- *Direction A (Availability-first):* High-density monthly matrix highlighting open slots and price deltas.
-- *Direction B (Itinerary-first):* Chronological stream emphasizing journey milestones and cancellation conditions.
+Repair mode uses [repair](./references/repair.md); it does not require alternative directions or broad visual change. Audit mode uses [critique](./references/critique.md), and reports fixes without applying them.
 
-Select the direction that maximizes task efficiency and product fit. For `Repair` mode, bypass direction selection and solve strictly within the existing system.
+## 5. Inspect, test, and refine
 
----
+Read [browser testing](./references/browser-testing.md) and [accessibility](./references/accessibility.md) when verifying UI. Use available browser tools or the bundled optional capture script; do not imply that a tool ran because instructions exist. Capture matched before/after states at 320, 768, and 1280 CSS pixels where appropriate. Check the primary task, keyboard focus, responsive reflow, relevant UI states, and console errors. Document justified exceptions for intrinsically two-dimensional content such as maps and data tables.
 
-### Step E — Define the Visual System
+Then use [critique](./references/critique.md) to assess the rendered design, not only syntax or contrast. Does the main task read first? Is the composition recognizably different where redesign was requested? Does the type carry a coherent identity? Is the memorable detail useful? Would replacing the logo make this indistinguishable from an unrelated product?
 
-Commit to concrete visual decisions before writing layout code:
+Address the highest-impact problems, normally within two visual refinement passes. An iteration budget limits open-ended aesthetic exploration; it is not a reason to leave a known broken interaction or build failure unresolved. If tools prevent verification, identify that limitation and the exact remaining checks. Never equate a setup check, screenshot capture, or static scan with visual quality or WCAG conformance.
 
-- **Typography:** Purposeful type roles (Display, Headings, Body, Monospace/Data). Set max measure (45–75 characters per line). Test real text lengths, numerals, and fallbacks.
-- **Color Roles:** Define semantic tokens: Surface, Text, Interactive/Action, Status (Success, Warning, Critical, Neutral). Every foreground-background pair must meet WCAG 2.2 AA contrast (4.5:1 for standard text, 3:1 for large text). Status must never be conveyed by color alone.
-- **Spatial Rhythm:** Consistent 4px or 8px baseline scale. Relate spatial grouping to cognitive relationships (Gestalt proximity).
-- **Component Geometry:** Explicit interactive states (default, hover, focus-visible, active, disabled). Touch targets must meet WCAG 2.2 AA target size (minimum 24×24 CSS px, ideally 40–48px for primary actions).
-- **Motion:** Explain state changes with 150–250ms transitions. Always respect `@media (prefers-reduced-motion: reduce)`.
-- **Copy:** Specific, truthful, contextual labels. Never fabricate fake testimonials, fake ratings, or misleading social proof.
+## 6. Deliver evidence and project memory
 
-See [references/visual-system.md](./references/visual-system.md).
+Finish with the visible changes, preserved constraints, tests actually run, and any unverified behavior. For redesign, compare each change-contract axis against baseline evidence. If the result still has the old template's hierarchy and rhythm, revise it or say the redesign is incomplete; do not claim transformation from a palette change alone.
 
----
+Update `DESIGN.md` with the chosen direction, tokens, constraints, rejected options with reasons, and performed/not-performed checks. Preserve existing useful decisions. See [design records](./references/design-record.md) for the schema; the wizard's `DWI-BRIEF.md` is context, not a replacement for this record.
 
-### Step F — Build One Representative Slice First
+## Conditional tools and sources
 
-Implement the most critical, revealing slice of the interface first (e.g., the primary booking calendar, the data filtering table, the order submission form).
-
-- Use realistic data lengths, edge-case characters, and responsive breakpoints.
-- Reuse existing components, classes, and build tools. Never introduce extraneous libraries or rewrite state logic solely to apply a visual theme.
-- Support essential states: Default, Loading/Skeleton, Empty, Error, and Success.
-
----
-
-### Step G — Verify and Repair
-
-Verify the implementation using available rendering tools or browser viewports:
-
-1. **Reflow & Viewports:** Verify at 320px (mobile reflow without horizontal scroll), 768px (tablet), and 1280px+ (desktop).
-2. **Accessibility Checklist:**
-   - Text contrast >= 4.5:1 (normal) or >= 3:1 (large text >= 24px or bold >= 18.5px).
-   - Target size >= 24×24 CSS px.
-   - Visible, high-contrast keyboard focus indicators (`:focus-visible`).
-   - Screen-reader accessible labels on icon-only buttons.
-3. **Budget:** Perform up to two critique/repair passes to address the highest-severity defects first.
-4. **Honest Reporting:** If visual inspection tools are unavailable, clearly mark the output as code-level verified and specify which manual checks remain.
-
-See [references/web.md](./references/web.md) and [references/repair.md](./references/repair.md).
-
----
-
-## 2. Diagnostic Quality Checks
-
-Ask these 7 diagnostic questions before declaring a design complete:
-
-1. **Substitution Test:** If you swapped the logo and brand name with an unrelated competitor, would the layout look identical? If yes, infuse specific domain utility.
-2. **Hierarchy Test:** Does the screen clearly guide the eye to the single most important action or metric within 3 seconds?
-3. **Justification Test:** Can you articulate a product-grounded reason for every decorative element, badge, and card border?
-4. **Structure Test:** Are disparate pieces of information forced into identical rounded cards, or does the layout reflect varied data semantics?
-5. **Content Authenticity:** Are headers descriptive and truthful, or filled with vague AI marketing fluff ("Supercharge your workflow")?
-6. **State Completeness:** How does the interface look when empty? When loading? When a network error occurs?
-7. **Continuity Test:** Does this change harmonize with the existing codebase and brand identity?
-
----
-
-## 3. Project Memory: `DESIGN.md`
-
-In multi-step projects, persist design decisions in a root `DESIGN.md` file using the structured frontmatter schema. This prevents circular debates and keeps team members aligned.
-
-When a user rejects a proposal, record the exact reason in `rejected_options` with project context. Do not convert one project's constraint into a global rule for other projects.
-
-See [references/design-record.md](./references/design-record.md).
-
----
-
-## 4. Reference Map
-
-When deeper guidance is needed, load the specialized reference file:
-
-- **Visual System & Tokens:** [references/visual-system.md](./references/visual-system.md)
-- **Repairing & Preserving Brands:** [references/repair.md](./references/repair.md)
-- **Web Layout, Accessibility & States:** [references/web.md](./references/web.md)
-- **Research, Evidence & Attribution:** [references/research.md](./references/research.md)
-- **Project Decision Records:** [references/design-record.md](./references/design-record.md)
-
----
-
-## 5. Completion Rules
-
-Before completing a design task, ensure:
-- [ ] Mode was properly identified (`Create`, `Repair`, or `Audit`).
-- [ ] In `Repair` mode, existing brand colors and functional behavior were preserved.
-- [ ] Typography and color choices have stated rationale and verified contrast.
-- [ ] Viewport reflow down to 320px width has been addressed without unneeded horizontal scroll.
-- [ ] Keyboard focus states and touch target sizes are verified.
-- [ ] No fake testimonials, fabricated statistics, or decorative distractions were added.
-- [ ] Verification limits are truthfully reported if rendering or browsing was unavailable.
+- User flows, information architecture, or explanatory diagrams: [diagrams](./references/diagrams.md). Do not add diagrams to an ordinary UI task without a purpose.
+- Individual color pairs: `node <skill-dir>/scripts/check-contrast.js <fg> <bg>`.
+- Target dimensions: `node <skill-dir>/scripts/touch-target-check.js <width> <height>`. This checks dimensions, not spacing exceptions or whole-page compliance.
+- Responsive screenshots: `node <skill-dir>/scripts/capture.mjs --help`. Playwright and a browser are optional environment dependencies, not included binaries.
+- Source provenance, adaptations, and external resources: [sources](./references/sources.md). The bundle is self-contained guidance; it does not require installing every upstream skill.

@@ -1,444 +1,135 @@
-/**
- * bin/wizard.js
- * Interactive Terminal Wizard for Design with Intent
- */
-
-import readline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
-import fs from 'node:fs';
+import readline from 'node:readline';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import {
-  calculateContrast,
-  checkTargetSize,
-  getSkillDir,
-  getDesignRecordTemplate,
-} from '../index.js';
+import { calculateContrast, checkTargetSize } from '../index.js';
+import { installSkill } from '../lib/install.js';
+import { themes, modes, modeDescriptions, inspectProject, saveBrief, getPrompt } from '../lib/workflow.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootPkgDir = path.resolve(__dirname, '..');
+class Cancelled extends Error {}
 
-// Visual ANSI styling
-const c = {
-  reset: '\x1b[0m',
-  bold: '\x1b[1m',
-  dim: '\x1b[2m',
-  cyan: '\x1b[36m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  magenta: '\x1b[35m',
-  red: '\x1b[31m',
-  blue: '\x1b[34m',
-  bgBlue: '\x1b[44m',
-  bgMagenta: '\x1b[45m',
-  white: '\x1b[37m',
-};
+export function printInstallResults(results, log = console.log) {
+  const counts = {};
+  for (const result of results) counts[result.status] = (counts[result.status] || 0) + 1;
+  log(`Skill files: ${Object.entries(counts).map(([status, count]) => `${count} ${status}`).join(', ')}.`);
+  if (counts.kept) log('Existing files were kept. Use install <target> --force to update them with backups.');
+}
 
-function copyDirRecursive(src, dest) {
-  fs.mkdirSync(dest, { recursive: true });
-  const entries = fs.readdirSync(src, { withFileTypes: true });
+export function showThemes(log = console.log) {
+  for (const theme of themes) {
+    log(`\n${theme.id} — ${theme.name}\n  For: ${theme.context}\n  Layout: ${theme.layout}\n  Type: ${theme.typography}\n  Palette: ${Object.entries(theme.colors).map(([role, color]) => `${role} ${color}`).join(' | ')}\n  Detail: ${theme.signature}`);
+  }
+  log('\nChoose custom to develop a direction from your own product and references.');
+}
 
-  for (const entry of entries) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
+export function showDoctor(cwd = process.cwd(), log = console.log) {
+  const project = inspectProject(cwd);
+  log(`\nSetup check: ${project.product}\nStack: ${project.frameworks.join(', ') || 'Not detected; inspect project files.'}`);
+  log(`Installed entrypoints: ${project.installed.join(', ') || 'None; run dwi install <target>.'}`);
+  log(`Project context: ${project.records.join(', ') || 'None; run dwi wizard.'}`);
+  log(`Dev command: ${project.scripts.dev ? 'npm run dev' : 'Check the project README.'}`);
+  log(`Optional Playwright module: ${project.playwright ? 'Found; browser availability still needs checking.' : 'Not found; use your agent browser or install Playwright for dwi capture.'}`);
+  project.warnings.forEach(log);
+  log('This checks setup only. It does not inspect rendered UI or score design/accessibility.');
+}
 
-    if (entry.isDirectory()) {
-      copyDirRecursive(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
+export function showGuide(log = console.log) {
+  log(`\n1. Run dwi wizard from the website project folder, not from this package's source.\n2. Choose Redesign for a generic existing site; Repair for one specific defect.\n3. Describe real users, the main task, the screen to change, and protected brand assets.\n4. Pick a starting direction or Custom. The agent will adapt it to your product.\n5. Open DWI-PROMPT.md and paste its contents into your coding agent. If the skill is not discovered, ask the agent to read the installed SKILL.md directly.\n6. Review matching before/after screenshots and test the primary flow.\n\nThe CLI installs guidance and writes context. Your coding agent implements the website. No model API key is needed by this CLI.\n\nCommands: dwi prompt redesign | create | repair | audit\n          dwi themes\n          dwi doctor\n          dwi capture --help`);
+}
+
+export async function runInteractiveWizard({ input = process.stdin, output = process.stdout, cwd = process.cwd() } = {}) {
+  const rl = readline.createInterface({ input, output, terminal: Boolean(input.isTTY && output.isTTY) });
+  const lines = rl[Symbol.asyncIterator]();
+  let cancelled = false;
+  rl.on('SIGINT', () => { cancelled = true; rl.close(); });
+  const log = text => output.write(`${text}\n`);
+  async function ask(label, fallback = '') {
+    output.write(`${label}${fallback ? ` [${fallback}]` : ''}: `);
+    const next = await lines.next();
+    if (cancelled || next.done || next.value.trim().toLowerCase() === 'q') throw new Cancelled();
+    return next.value.trim() || fallback;
+  }
+  async function choose(label, items, fallback = 1) {
+    log(`\n${label}`);
+    items.forEach((item, i) => log(`  ${i + 1}) ${item.label}`));
+    while (true) {
+      const choice = await ask(`Choose 1–${items.length}`, String(fallback));
+      if (/^\d+$/.test(choice) && items[Number(choice) - 1]) return items[Number(choice) - 1].value;
+      log('Please enter one of the listed numbers, or q to cancel.');
     }
   }
-}
-
-function clearScreen() {
-  if (process.stdout.isTTY) {
-    process.stdout.write('\x1b[2J\x1b[0f');
+  async function pickTarget() {
+    return choose('Which coding agent will use the skill?', [
+      { label: 'Codex — project skill', value: 'codex' },
+      { label: 'Claude Code — project skill', value: 'claude' },
+      { label: 'Cursor — full skill + rule', value: 'cursor' },
+      { label: 'Antigravity — project skill', value: 'antigravity' },
+      { label: 'All project agents', value: 'all' },
+      { label: 'Global Antigravity profile', value: 'global' },
+    ]);
   }
-}
-
-function printHeader() {
-  console.log(`
-${c.cyan}${c.bold}╔══════════════════════════════════════════════════════════════════════════╗
-║                    ${c.magenta}🎯  DESIGN WITH INTENT  ${c.cyan}                             ║
-║       Portable Agent Skill & Design Tooling for AI Coding Agents         ║
-╚══════════════════════════════════════════════════════════════════════════╝${c.reset}
-`);
-}
-
-async function ask(rl, prompt, defaultVal = '') {
   try {
-    const display = defaultVal ? `${c.bold}${prompt}${c.reset} [${c.dim}${defaultVal}${c.reset}]: ` : `${c.bold}${prompt}${c.reset}: `;
-    const answer = await rl.question(display);
-    return answer.trim() || defaultVal;
-  } catch {
-    return defaultVal;
-  }
-}
-
-/**
- * 1. Interactive Quickstart
- */
-async function interactiveQuickstart(rl) {
-  console.log(`\n${c.bgBlue}${c.white}${c.bold}  STEP 1: TARGET AI CODING AGENTS  ${c.reset}\n`);
-  console.log(`Where would you like to install the skill?`);
-  console.log(`  ${c.cyan}1)${c.reset} Google Antigravity IDE   ${c.dim}(.agents/skills/design-with-intent)${c.reset}`);
-  console.log(`  ${c.cyan}2)${c.reset} Claude Code              ${c.dim}(.claude/skills/design-with-intent)${c.reset}`);
-  console.log(`  ${c.cyan}3)${c.reset} Cursor IDE               ${c.dim}(.cursor/rules/design-with-intent.mdc)${c.reset}`);
-  console.log(`  ${c.cyan}4)${c.reset} Global User Profile      ${c.dim}(~/.gemini/config/skills/)${c.reset}`);
-  console.log(`  ${c.cyan}5)${c.reset} ${c.bold}All Agents${c.reset}               ${c.green}(Recommended)${c.reset}`);
-
-  const targetChoice = await ask(rl, 'Select option (1-5)', '5');
-  const cwd = process.cwd();
-  const skillSrc = getSkillDir();
-  const installedPaths = [];
-
-  if (targetChoice === '1' || targetChoice === '5') {
-    const dest = path.join(cwd, '.agents/skills/design-with-intent');
-    copyDirRecursive(skillSrc, dest);
-    installedPaths.push(path.relative(cwd, dest));
-  }
-  if (targetChoice === '2' || targetChoice === '5') {
-    const dest = path.join(cwd, '.claude/skills/design-with-intent');
-    copyDirRecursive(skillSrc, dest);
-    installedPaths.push(path.relative(cwd, dest));
-  }
-  if (targetChoice === '3' || targetChoice === '5') {
-    const mdcSrc = path.join(rootPkgDir, 'adapters/cursor/design-with-intent.mdc');
-    const destDir = path.join(cwd, '.cursor/rules');
-    fs.mkdirSync(destDir, { recursive: true });
-    fs.copyFileSync(mdcSrc, path.join(destDir, 'design-with-intent.mdc'));
-    installedPaths.push('.cursor/rules/design-with-intent.mdc');
-  }
-  if (targetChoice === '4') {
-    const homedir = process.env.HOME || process.env.USERPROFILE || '';
-    if (homedir) {
-      const globalDest = path.join(homedir, '.gemini/config/skills/design-with-intent');
-      copyDirRecursive(skillSrc, globalDest);
-      installedPaths.push(globalDest);
+    log('\nDESIGN WITH INTENT\nA guided brief for better websites. Enter q at any prompt to cancel.\nThe CLI prepares your project; your coding agent makes the design changes.');
+    const action = await choose('What do you want to do?', [
+      { label: 'Guided setup — install, create brief, get an agent prompt', value: 'setup' },
+      { label: 'Install the skill only', value: 'install' },
+      { label: 'Explore visual directions', value: 'themes' },
+      { label: 'Check project setup', value: 'doctor' },
+      { label: 'Learn how to use the skill', value: 'guide' },
+      { label: 'Check a color pair', value: 'contrast' },
+      { label: 'Check target dimensions', value: 'target' },
+    ]);
+    if (action === 'themes') return showThemes(log);
+    if (action === 'doctor') return showDoctor(cwd, log);
+    if (action === 'guide') return showGuide(log);
+    if (action === 'contrast') {
+      const fg = await ask('Foreground color', '#203328');
+      const bg = await ask('Background color', '#F4F7EF');
+      const result = calculateContrast(fg, bg);
+      return log(`Contrast ${result.ratio}:1; normal text AA ${result.normalTextAA ? 'passes' : 'fails'}. This checks this color pair only.`);
     }
-  }
-
-  console.log(`\n${c.bgBlue}${c.white}${c.bold}  STEP 2: PROJECT DESIGN RECORD (DESIGN.md)  ${c.reset}\n`);
-  let defaultName = path.basename(cwd);
-  const pkgPath = path.join(cwd, 'package.json');
-  if (fs.existsSync(pkgPath)) {
-    try {
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-      if (pkg.name) defaultName = pkg.name;
-    } catch {}
-  }
-
-  const productName = await ask(rl, 'Product or Project Name', defaultName);
-  const audience = await ask(rl, 'Primary Audience / Persona', 'Domain users & operators');
-  const primaryTask = await ask(rl, 'Primary User Task / Goal', 'Complete core workflow efficiently with clear feedback');
-  
-  console.log(`\nSelect Primary Design Mode:`);
-  console.log(`  ${c.cyan}1)${c.reset} ${c.bold}create${c.reset}  — New product, clean slate, or ground-up redesign`);
-  console.log(`  ${c.cyan}2)${c.reset} ${c.bold}repair${c.reset}  — Existing product; improve UI while preserving brand`);
-  console.log(`  ${c.cyan}3)${c.reset} ${c.bold}audit${c.reset}   — UX, accessibility & design critique only`);
-  const modeChoice = await ask(rl, 'Mode (1-3)', '1');
-  const modeMap = { '1': 'create', '2': 'repair', '3': 'audit' };
-  const mode = modeMap[modeChoice] || 'create';
-
-  const brandColor = await ask(rl, 'Signature Brand Color or Invariant to preserve (e.g. #6D28D9, or press Enter to skip)', '');
-  const preserveList = brandColor ? [`Mandated Brand Color (${brandColor})`] : [];
-
-  const designMdPath = path.join(cwd, 'DESIGN.md');
-  const templateContent = getDesignRecordTemplate({
-    product: productName,
-    audience,
-    primary_task: primaryTask,
-    mode,
-    preserve: preserveList,
-  });
-
-  fs.writeFileSync(designMdPath, templateContent, 'utf8');
-
-  // Success summary banner
-  console.log(`\n${c.green}${c.bold}══════════════════════════════════════════════════════════════════════════${c.reset}`);
-  console.log(`${c.green}${c.bold}  ✓ SETUP COMPLETE!${c.reset}`);
-  console.log(`${c.green}${c.bold}══════════════════════════════════════════════════════════════════════════${c.reset}\n`);
-  console.log(`${c.bold}Installed Skills / Rules:${c.reset}`);
-  for (const p of installedPaths) {
-    console.log(`  ${c.green}✓${c.reset} ${p}`);
-  }
-  console.log(`\n${c.bold}Created Decision Record:${c.reset}`);
-  console.log(`  ${c.green}✓${c.reset} ${path.relative(cwd, designMdPath)}`);
-
-  console.log(`\n${c.magenta}${c.bold}How to prompt your AI Agent now:${c.reset}`);
-  console.log(`  ${c.cyan}"Follow DESIGN.md and create our layout using deliberate visual hierarchy, semantic tokens, and WCAG AA contrast."${c.reset}\n`);
-}
-
-/**
- * 2. Interactive Contrast Checker
- */
-async function interactiveContrast(rl) {
-  console.log(`\n${c.bgMagenta}${c.white}${c.bold}  WCAG 2.2 AA / AAA COLOR CONTRAST EVALUATOR  ${c.reset}\n`);
-  console.log(`Enter two colors in hex (e.g. ${c.yellow}#6D28D9${c.reset}) or rgb format:\n`);
-
-  while (true) {
-    const fg = await ask(rl, 'Foreground (Text / Icon) Color', '#6D28D9');
-    const bg = await ask(rl, 'Background Color', '#FFFFFF');
-
-    try {
-      const res = calculateContrast(fg, bg);
-      const ratioNum = parseFloat(res.ratio);
-      const barFilled = Math.min(20, Math.round((ratioNum / 21) * 20));
-      const bar = '■'.repeat(barFilled) + '░'.repeat(20 - barFilled);
-
-      console.log(`\n${c.bold}Contrast Results for ${fg} on ${bg}:${c.reset}`);
-      console.log(`  Ratio:       ${c.cyan}${c.bold}${res.ratio}:1${c.reset} [${bar}]`);
-      console.log(`  Normal Text (AA  >= 4.5:1):  ${res.normalTextAA ? `${c.green}✓ PASS${c.reset}` : `${c.red}✗ FAIL${c.reset}`}`);
-      console.log(`  Normal Text (AAA >= 7.0:1):  ${res.normalTextAAA ? `${c.green}✓ PASS${c.reset}` : `${c.yellow}✗ FAIL${c.reset}`}`);
-      console.log(`  Large Text  (AA  >= 3.0:1):  ${res.largeTextAA ? `${c.green}✓ PASS${c.reset}` : `${c.red}✗ FAIL${c.reset}`}`);
-      console.log(`  Large Text  (AAA >= 4.5:1):  ${res.largeTextAAA ? `${c.green}✓ PASS${c.reset}` : `${c.yellow}✗ FAIL${c.reset}`}`);
-      console.log(`  UI Borders  (AA  >= 3.0:1):  ${res.uiComponentAA ? `${c.green}✓ PASS${c.reset}` : `${c.red}✗ FAIL${c.reset}`}`);
-
-      if (res.normalTextAA) {
-        console.log(`\n  ${c.green}✓ Excellent! Meets standard WCAG 2.2 AA accessibility requirements.${c.reset}`);
-      } else {
-        console.log(`\n  ${c.red}⚠ Warning: Fails WCAG 2.2 AA. Darken the foreground or lighten the background.${c.reset}`);
-      }
-    } catch (err) {
-      console.log(`\n  ${c.red}Error: ${err.message}${c.reset}`);
+    if (action === 'target') {
+      const width = await ask('Width in CSS pixels', '44');
+      const height = await ask('Height in CSS pixels', '44');
+      const result = checkTargetSize(width, height);
+      return log(`${result.status}. Dimension check only; spacing and WCAG exceptions need contextual review.`);
     }
-
-    const again = await ask(rl, '\nCheck another color pair? (y/N)', 'n');
-    if (again.toLowerCase() !== 'y' && again.toLowerCase() !== 'yes') {
-      break;
+    const target = await pickTarget();
+    if (action === 'install') {
+      printInstallResults(installSkill({ target, cwd }), log);
+      log('Next: dwi wizard for a project brief, or dwi prompt redesign for an agent prompt.');
+      return;
     }
-    console.log('');
-  }
-}
-
-/**
- * 3. Interactive Touch Target Checker
- */
-async function interactiveTargetSize(rl) {
-  console.log(`\n${c.bgMagenta}${c.white}${c.bold}  TOUCH TARGET SIZE CHECKER (WCAG 2.2 AA)  ${c.reset}\n`);
-
-  while (true) {
-    const w = await ask(rl, 'Element Width (pixels)', '48');
-    const h = await ask(rl, 'Element Height (pixels)', '48');
-
-    try {
-      const res = checkTargetSize(w, h, true);
-      console.log(`\n${c.bold}Target Size Evaluation (${w}px × ${h}px):${c.reset}`);
-      console.log(`  WCAG 2.2 AA (>= 24×24px):       ${res.wcag22AA ? `${c.green}✓ PASS${c.reset}` : `${c.red}✗ FAIL${c.reset}`}`);
-      console.log(`  Mobile Recommended (>= 44×44px): ${res.mobileRecommended ? `${c.green}✓ PASS${c.reset}` : `${c.yellow}✗ BELOW RECOMMENDED${c.reset}`}`);
-      console.log(`  Rating:                         ${c.cyan}${c.bold}${res.status}${c.reset}`);
-    } catch (err) {
-      console.log(`\n  ${c.red}Error: ${err.message}${c.reset}`);
+    const project = inspectProject(cwd);
+    log(`\nProject: ${project.product} | Stack: ${project.frameworks.join(', ') || 'not detected'}\nAll answers are collected before files are written. Existing DESIGN.md is preserved.`);
+    const mode = await choose('What kind of work is needed?', modes.map(value => ({ value, label: `${value} — ${modeDescriptions[value]}` })));
+    const options = { mode };
+    options.product = await ask('Product name and purpose', project.product);
+    options.audience = await ask('Who uses it, and in what setting?', 'Infer from the project and state assumptions');
+    options.task = await ask('What should users accomplish first?', 'Identify the main existing or requested flow');
+    options.scope = await ask('Which page, route, or component?', 'Primary screen and directly related components');
+    options.problems = await ask('What is wrong today, or what should change?', mode === 'redesign' ? 'Looks generic; needs a visibly different composition and stronger identity' : 'Follow the current task');
+    options.preserve = await ask('What MUST stay? Name only real constraints', 'Working features, routes, data, and explicit brand requirements');
+    options.references = await ask('Reference URLs or visual cues (optional)');
+    options.theme = await choose('Pick a starting visual direction', [
+      { label: 'Custom — derive it from my product and references', value: 'custom' },
+      ...themes.map(t => ({ label: `${t.name} — ${t.context}`, value: t.id })),
+    ]);
+    const theme = themes.find(t => t.id === options.theme);
+    if (theme) log(`\nDirection preview\n${theme.layout}\n${theme.typography}\n${Object.entries(theme.colors).map(([k, v]) => `${k}: ${v}`).join(' | ')}\nSignature: ${theme.signature}`);
+    log(`\nReady: ${target} installation; ${mode} brief for ${options.product}.\nWrites DWI-BRIEF.md and DWI-PROMPT.md. Keeps DESIGN.md and existing skill files.`);
+    while (true) {
+      const answer = (await ask('Write these files? (Y/n)', 'y')).toLowerCase();
+      if (['y', 'yes'].includes(answer)) break;
+      if (['n', 'no'].includes(answer)) throw new Cancelled();
+      log('Please enter y or n, or q to cancel.');
     }
-
-    const again = await ask(rl, '\nCheck another target size? (y/N)', 'n');
-    if (again.toLowerCase() !== 'y' && again.toLowerCase() !== 'yes') {
-      break;
-    }
-    console.log('');
-  }
-}
-
-/**
- * 4. Workspace Design Health Audit
- */
-async function workspaceHealthAudit() {
-  const cwd = process.cwd();
-  console.log(`\n${c.bgBlue}${c.white}${c.bold}  WORKSPACE DESIGN HEALTH SCORECARD  ${c.reset}\n`);
-  console.log(`Inspecting workspace: ${c.dim}${cwd}${c.reset}\n`);
-
-  let score = 0;
-  let maxScore = 5;
-
-  // 1. Check Antigravity / Claude / Cursor skills
-  const hasAntigravity = fs.existsSync(path.join(cwd, '.agents/skills/design-with-intent/SKILL.md'));
-  const hasClaude = fs.existsSync(path.join(cwd, '.claude/skills/design-with-intent/SKILL.md'));
-  const hasCursor = fs.existsSync(path.join(cwd, '.cursor/rules/design-with-intent.mdc'));
-
-  if (hasAntigravity || hasClaude || hasCursor) {
-    console.log(`  ${c.green}✓${c.reset} Agent Skill Installed:`);
-    if (hasAntigravity) console.log(`      • Antigravity IDE: .agents/skills/design-with-intent/`);
-    if (hasClaude) console.log(`      • Claude Code: .claude/skills/design-with-intent/`);
-    if (hasCursor) console.log(`      • Cursor: .cursor/rules/design-with-intent.mdc`);
-    score++;
-  } else {
-    console.log(`  ${c.red}✗${c.reset} Agent Skill: Not found in current workspace`);
-  }
-
-  // 2. Check DESIGN.md
-  const designMdPath = path.join(cwd, 'DESIGN.md');
-  if (fs.existsSync(designMdPath)) {
-    console.log(`  ${c.green}✓${c.reset} Project Memory: DESIGN.md exists`);
-    score++;
-
-    const content = fs.readFileSync(designMdPath, 'utf8');
-    if (content.includes('schema_version:') && content.includes('product:') && content.includes('primary_task:')) {
-      console.log(`  ${c.green}✓${c.reset} DESIGN.md Schema: Core frontmatter keys present`);
-      score++;
-    } else {
-      console.log(`  ${c.yellow}⚠${c.reset} DESIGN.md Schema: Missing standard frontmatter keys`);
-    }
-  } else {
-    console.log(`  ${c.yellow}⚠${c.reset} Project Memory: DESIGN.md not found (Run 'npx design-with-intent record')`);
-  }
-
-  // 3. Check for tokens or CSS styles
-  const commonTokenPaths = [
-    'src/styles/tokens.css',
-    'src/tokens.css',
-    'src/index.css',
-    'styles/tokens.css',
-    'src/styles/global.css',
-  ];
-  const foundToken = commonTokenPaths.find(p => fs.existsSync(path.join(cwd, p)));
-  if (foundToken) {
-    console.log(`  ${c.green}✓${c.reset} Design Tokens Source: Found ${foundToken}`);
-    score++;
-  } else {
-    console.log(`  ${c.dim}ℹ${c.reset} Design Tokens: No standard tokens.css found`);
-  }
-
-  // 4. Check package.json accessibility scripts
-  const pkgPath = path.join(cwd, 'package.json');
-  if (fs.existsSync(pkgPath)) {
-    try {
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-      if (pkg.scripts && (pkg.scripts.contrast || pkg.scripts.accessibility)) {
-        console.log(`  ${c.green}✓${c.reset} Package Scripts: Accessibility checks configured in package.json`);
-        score++;
-      } else {
-        console.log(`  ${c.dim}ℹ${c.reset} Package Scripts: Consider adding "contrast": "design-with-intent contrast"`);
-      }
-    } catch {}
-  }
-
-  console.log(`\n${c.bold}Health Score: ${score}/${maxScore}${c.reset}`);
-  if (score >= 4) {
-    console.log(`${c.green}${c.bold}Status: EXCELLENT${c.reset} — Your workspace is primed for intentional AI design.\n`);
-  } else if (score >= 2) {
-    console.log(`${c.yellow}${c.bold}Status: GOOD${c.reset} — Core setup active; add DESIGN.md or tokens to complete.\n`);
-  } else {
-    console.log(`${c.red}${c.bold}Status: NEEDS SETUP${c.reset} — Run option [1] Quickstart to configure your workspace.\n`);
-  }
-}
-
-/**
- * 5. Prompting Guide
- */
-function showPromptingGuide() {
-  console.log(`\n${c.bgBlue}${c.white}${c.bold}  AI AGENT PROMPTING CHEAT SHEET  ${c.reset}\n`);
-  
-  console.log(`${c.bold}${c.cyan}1. CREATE MODE (New Feature / Clean Slate):${c.reset}`);
-  console.log(`  "Act using the design-with-intent skill in Create mode. Inspect DESIGN.md`);
-  console.log(`   and propose 2 distinct visual directions for our product before writing`);
-  console.log(`   the code. Use semantic CSS variables and verify WCAG 2.2 AA contrast."\n`);
-
-  console.log(`${c.bold}${c.cyan}2. REPAIR MODE (Refactoring Existing UI):${c.reset}`);
-  console.log(`  "Use design-with-intent in Repair mode to fix the mobile layout of our table.`);
-  console.log(`   Strictly preserve our existing brand purple tokens (#6D28D9) and existing logic.`);
-  console.log(`   Reflow the 8 columns into responsive cards below 680px."\n`);
-
-  console.log(`${c.bold}${c.cyan}3. AUDIT MODE (Accessibility & UX Critique):${c.reset}`);
-  console.log(`  "Run an Audit using design-with-intent on our checkout page.`);
-  console.log(`   Check touch target dimensions (>= 24px) and color contrast on all buttons`);
-  console.log(`   and form states. Provide evidence without changing code."\n`);
-}
-
-/**
- * Main Interactive Wizard Loop
- */
-export async function runInteractiveWizard() {
-  clearScreen();
-  printHeader();
-
-  const rl = readline.createInterface({ input, output });
-  let running = true;
-
-  rl.on('close', () => {
-    running = false;
-  });
-
-  try {
-    while (running) {
-      console.log(`${c.bold}What would you like to do?${c.reset}`);
-      console.log(`  ${c.cyan}1)${c.reset} 🚀 ${c.bold}Quickstart:${c.reset} Install skill & setup DESIGN.md`);
-      console.log(`  ${c.cyan}2)${c.reset} 📦 Install skill for coding agents ${c.dim}(Antigravity, Claude, Cursor)${c.reset}`);
-      console.log(`  ${c.cyan}3)${c.reset} 📝 Create / Update DESIGN.md decision record`);
-      console.log(`  ${c.cyan}4)${c.reset} 🎨 Check WCAG 2.2 color contrast ${c.dim}(Interactive)${c.reset}`);
-      console.log(`  ${c.cyan}5)${c.reset} 📱 Check touch target size for mobile ${c.dim}(Interactive)${c.reset}`);
-      console.log(`  ${c.cyan}6)${c.reset} 🔍 Workspace design health scorecard`);
-      console.log(`  ${c.cyan}7)${c.reset} 📖 AI agent prompt cheat sheet`);
-      console.log(`  ${c.cyan}0)${c.reset} 🚪 Exit\n`);
-
-      const choice = await ask(rl, 'Enter choice (0-7)', '0');
-      if (!running) break;
-
-      switch (choice) {
-        case '1':
-          await interactiveQuickstart(rl);
-          break;
-        case '2':
-          console.log('');
-          await interactiveQuickstart(rl);
-          break;
-        case '3': {
-          const cwd = process.cwd();
-          const pName = await ask(rl, 'Product Name', path.basename(cwd));
-          const pAudience = await ask(rl, 'Audience', 'Target users');
-          const pTask = await ask(rl, 'Primary Task', 'Accomplish core goal');
-          const pBrand = await ask(rl, 'Signature Brand Color to Preserve (or Enter)', '');
-          const dest = path.join(cwd, 'DESIGN.md');
-          const content = getDesignRecordTemplate({
-            product: pName,
-            audience: pAudience,
-            primary_task: pTask,
-            preserve: pBrand ? [`Brand Color (${pBrand})`] : [],
-          });
-          fs.writeFileSync(dest, content, 'utf8');
-          console.log(`\n  ${c.green}✓ Created DESIGN.md${c.reset} in ${dest}\n`);
-          break;
-        }
-        case '4':
-          await interactiveContrast(rl);
-          break;
-        case '5':
-          await interactiveTargetSize(rl);
-          break;
-        case '6':
-          await workspaceHealthAudit();
-          break;
-        case '7':
-          showPromptingGuide();
-          break;
-        case '0':
-        case 'exit':
-        case 'q':
-          console.log(`\n${c.dim}Exiting Design with Intent. Happy designing!${c.reset}\n`);
-          running = false;
-          break;
-        default:
-          console.log(`\n${c.yellow}Invalid option. Please choose between 0 and 7.${c.reset}\n`);
-          break;
-      }
-
-      if (running) {
-        if (!process.stdin.isTTY) {
-          // If running non-interactively (e.g. piped or test), exit after first run
-          running = false;
-          break;
-        }
-        const proceed = await ask(rl, '\nPress Enter to return to main menu or "q" to exit', '');
-        if (proceed.toLowerCase() === 'q' || proceed.toLowerCase() === 'exit') {
-          running = false;
-          console.log(`\n${c.dim}Exiting Design with Intent. Happy designing!${c.reset}\n`);
-        } else {
-          clearScreen();
-          printHeader();
-        }
-      }
-    }
-  } finally {
-    rl.close();
-  }
+    // Reject existing briefs before installing anything. Save does not overwrite without --force.
+    const records = saveBrief(options, cwd);
+    printInstallResults(installSkill({ target, cwd }), log);
+    records.forEach(r => log(`${r.status}: ${path.relative(cwd, r.file)}`));
+    log('\nNEXT: Paste the contents of DWI-PROMPT.md into your coding agent in this project.\n');
+    log(getPrompt(mode));
+  } catch (error) {
+    if (error instanceof Cancelled) log('\nCancelled. No pending setup answers were written.');
+    else throw error;
+  } finally { rl.close(); }
 }

@@ -1,6 +1,8 @@
 # 🎯 Design with Intent: The Antidote to "AI Slop" in UI/UX Design
 
 > **The ultimate guide, product story, and promotional video kit for `design-with-intent`.**  
+> This is promotional material, not verification evidence. The CLI prepares instructions; the coding agent implements the design. Neither the skill nor helper tests guarantee visual quality or accessibility conformance. See [README.md](./README.md) for the current workflow.
+>
 > *Use this document to understand the product, craft high-converting pitch decks, and generate promotional videos showing how this package solves the biggest crisis in AI-assisted software development.*
 
 ---
@@ -13,8 +15,8 @@
 | :--- | :--- | :--- |
 | **0:00 - 0:12** | **The Hook:** Split screen of 10 different AI-generated SaaS landing pages. They all look identical: dark purple gradients, Inter font, generic white rounded cards with blurry drop shadows. A big red stamp appears: **"AI SLOP."** | *"Have you noticed that every AI coding tool designs the exact same app? The same purple gradients. The same cookie-cutter cards. The same generic Inter typography. It's called 'AI Slop'—and it's killing distinct software design."* |
 | **0:12 - 0:24** | **The Overcorrection Trap:** User types into an AI chat: *"Don't make it look like AI."* The AI responds by swinging to another tired stereotype: boring beige backgrounds, oversized editorial serifs, and orange buttons. | *"When you tell an AI 'Don't make it look like AI', it overcorrects into another cliché: beige backgrounds, pretentious serifs, and unreadable contrast. Banning purple doesn't make a design good. Purpose makes a design good."* |
-| **0:24 - 0:40** | **The Solution:** A sleek terminal opens. The command `npx design-with-intent` is typed. A vibrant interactive terminal wizard springs to life with badges, checkmarks, and a health scorecard. | *"Meet **Design with Intent**. A portable agent skill and design framework for Google Antigravity, Claude Code, Cursor, and Codex that forces AI coding agents to design with deliberate purpose."* |
-| **0:40 - 0:58** | **The 3 Operating Modes:** Split animation showcasing:<br>• **Create:** Agent comparing 2 distinct visual directions.<br>• **Repair:** Fixing an 8-column table into mobile cards while preserving client brand tokens.<br>• **Audit:** Checking WCAG 2.2 AA contrast with green checkmarks. | *"Instead of guessing, your agent operates in 3 distinct modes: **Create** builds intentional visual systems from scratch. **Repair** fixes messy layouts while strictly protecting your established brand identity. And **Audit** catches accessibility defects before you ship."* |
+| **0:24 - 0:40** | **The Solution:** A sleek terminal opens. The command `npx design-with-intent` is typed. A guided terminal wizard collects the audience, redesign scope, protected assets, and visual direction, then provides a prompt to paste into the coding agent. | *"Meet **Design with Intent**. A portable agent skill and design framework for Google Antigravity, Claude Code, Cursor, and Codex that forces AI coding agents to design with deliberate purpose."* |
+| **0:40 - 0:58** | **The 4 Operating Modes:** Split animation showcasing:<br>• **Redesign:** A substantial before/after change to an existing generic site.<br>• **Create:** Agent comparing 2 distinct visual directions.<br>• **Repair:** Fixing an 8-column table into mobile cards while preserving client brand tokens.<br>• **Audit:** Checking WCAG 2.2 AA contrast with green checkmarks. | *"Instead of guessing, your agent operates in 4 distinct modes: **Redesign** transforms generic existing screens. **Create** builds intentional visual systems from scratch. **Repair** fixes messy layouts while strictly protecting your established brand identity. And **Audit** catches accessibility defects before you ship."* |
 | **0:58 - 1:12** | **Persistent Project Memory (`DESIGN.md`):** A clean `DESIGN.md` file appears. Visual arrows show the agent reading brand invariants, token files, and rejected options so it never forgets context across chats. | *"Best of all: it gives your agent long-term memory. With a standardized `DESIGN.md` decision record, your AI never forgets your brand tokens, mobile rules, or user constraints—even across weeks of new chat sessions."* |
 | **1:12 - 1:30** | **The Call to Action:** Fast-paced terminal montage: `dwi contrast`, `dwi target-size`. Badges for Antigravity, Claude Code, Cursor, and npm appear. Final title card: **Design with Intent — Zero Slop. Pure Purpose.** | *"No more cookie-cutter apps. No more broken contrast. Just intentional, accessible, production-ready design.<br><br>Run `npx design-with-intent` in your terminal today. Available on npm and GitHub."* |
 
@@ -26,7 +28,7 @@
 * **The Symptom:** LLMs gravitate toward high-frequency training data defaults. By default, coding agents generate dark purple hero banners, generic Inter fonts, identical rounded card grids, and arbitrary decorative drop shadows that have no relationship to the product domain.
 * **How `design-with-intent` solves it:**
   - Enforces the **Central Rule**: *Every major visual decision must have an explicit reason connected to the product, audience, content, or medium.*
-  - Rather than rushing to write CSS, the agent enters **Create Mode** to evaluate **2 to 3 structurally distinct visual directions** rooted in a *Reference Triad* (1 direct competitor, 1 adjacent field, 1 domain artifact from the real world).
+  - Rather than rushing to write CSS, the agent enters **Create or Redesign Mode** to evaluate **2 to 3 structurally distinct visual directions** rooted in a *Reference Triad* (1 direct competitor, 1 adjacent field, 1 domain artifact from the real world).
 
 ---
 
@@ -88,17 +90,17 @@
  └───────┬───────┘                 └───────┬───────┘                 └───────┬───────┘
          │                                 │                                 │
   • Antigravity IDE                 • npx wizard setup                • WCAG 2.2 contrast
-  • Claude Code                     • Health scorecard                • Touch target check
-  • Cursor Rules                    • DESIGN.md scaffold              • Schema validator
-  • OpenAI Codex                    • Prompt cheat sheets             • 26-test benchmark
+  • Claude Code                     • Project setup check                • Touch target check
+  • Cursor Rules                    • Brief + agent prompt              • Schema validator
+  • OpenAI Codex                    • Prompt cheat sheets             • CLI + helper tests
 ```
 
-1. **Zero-Dependency Architecture:** Pure Node.js (>= 18.0.0). No bulky dependencies to download. Runs instantaneously with `npx`.
+1. **Zero-Dependency Architecture:** Pure Node.js (>= 18.3.0). No bulky dependencies to download. Runs with `npx`; optional browser capture requires Playwright and a browser.
 2. **Interactive Terminal Wizard (`dwi` / `npx design-with-intent`):**
    - Guided agent configuration.
-   - Interactive WCAG contrast ratio meter with instant AA/AAA badges.
+   - Interactive color-pair contrast check.
    - Mobile touch target size analyzer.
-   - Workspace health scorecard that audits your project's design system maturity.
+   - Project setup check that reports installed files and tooling, without claiming to measure design quality.
 3. **Multi-Agent Adaptability:**
    - Installs seamlessly into `.agents/skills/` (Antigravity), `.claude/skills/` (Claude Code), or `.cursor/rules/` (Cursor).
 4. **Automated CI/CD & GitHub Release Sync:**
@@ -133,6 +135,8 @@ npx design-with-intent target-size 48 48
 ```
 
 ### 3. Golden Prompts to give your AI Agent:
+* **Redesign Mode (Generic existing site):**
+  > *"Use design-with-intent in redesign mode. Read DWI-BRIEF.md, compare two directions, and implement a substantial change to composition, typography, and color roles where allowed. Preserve working behavior and explicit brand constraints. Compare matching before/after screenshots."*
 * **Create Mode (New feature):**
   > *"Act using the design-with-intent skill in Create mode. Inspect DESIGN.md and propose 2 distinct visual directions for our product before writing code. Use semantic CSS variables and verify WCAG 2.2 AA contrast."*
 * **Repair Mode (Fixing existing UI):**
@@ -147,7 +151,7 @@ npx design-with-intent target-size 48 48
 | Without `design-with-intent` | With `design-with-intent` |
 | :--- | :--- |
 | Generic, disposable "AI Slop" look | Purposeful, distinctive product identity |
-| Random contrast failures and inaccessible UIs | Mathematically verified WCAG 2.2 AA compliance |
+| Random contrast failures and inaccessible UIs | Color-pair checks plus a browser and accessibility review workflow |
 | AI forgets decisions every new chat session | Persistent project memory in `DESIGN.md` |
 | AI rebrands and ruins existing client themes | Strict brand preservation invariants |
 | Hours wasted tweaking prompts | One-command setup (`npx design-with-intent`) |

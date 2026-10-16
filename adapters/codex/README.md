@@ -1,12 +1,7 @@
-# OpenAI Codex & Custom GPTs Adapter
+# Codex
 
-This adapter provides instructions for injecting `design-with-intent` into OpenAI Codex or Custom GPT system instructions.
+From the website project, run `npx design-with-intent install codex` or the interactive wizard. The full skill is installed at `.agents/skills/design-with-intent/`.
 
-## System Prompt Injection
-For LLMs without filesystem skill discovery:
-1. Paste the content of `skills/design-with-intent/SKILL.md` into the agent's custom instructions or system prompt.
-2. If working on a specific task (e.g. Repair or Web Accessibility), append the corresponding reference file (`references/repair.md` or `references/web.md`).
+Paste `DWI-PROMPT.md` into Codex after guided setup, or ask it to use `$design-with-intent` in redesign, create, repair, or audit mode. If discovery is unavailable, ask it to read `.agents/skills/design-with-intent/SKILL.md` directly.
 
-## Honest Verification Rule
-Because standard OpenAI API completions cannot independently run local headless browsers without external tool calling, the agent must output:
-> *"Code generated conforming to WCAG 2.2 AA contrast and responsive CSS Grid rules. Browser inspection was not run locally; please verify in browser viewports."*
+The project skill location follows [official repository guidance](https://developers.openai.com/blog/skills-agents-sdk). The installer does not overwrite `AGENTS.md`.

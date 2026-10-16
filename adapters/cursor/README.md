@@ -1,16 +1,5 @@
-# Cursor Host Adapter
+# Cursor
 
-This adapter provides rules for **Cursor** editor (`.cursorrules` or `.cursor/rules/`).
+Run `npx design-with-intent install cursor` from the website project, or use the wizard. This installs both the complete skill at `.agents/skills/design-with-intent/` and a routing rule at `.cursor/rules/design-with-intent.mdc`.
 
-## Installation
-
-### In Modern Cursor (0.40+)
-Copy `design-with-intent.mdc` into your project's `.cursor/rules/` directory:
-
-```bash
-mkdir -p .cursor/rules
-cp adapters/cursor/design-with-intent.mdc .cursor/rules/
-```
-
-### In Legacy Cursor (.cursorrules)
-Append the contents of `design-with-intent.mdc` to your root `.cursorrules` file.
+Paste `DWI-PROMPT.md` into your agent after setup. If the rule is not selected, ask it to read the installed `SKILL.md` directly. Choose redesign for a generic existing site and repair for a specific defect. The rule intentionally delegates to the full bundled workflow instead of maintaining a separate abbreviated copy.

@@ -1,7 +1,7 @@
 {
   "name": "design-with-intent",
-  "version": "1.0.2",
-  "description": "A portable agent skill and evaluation framework that produces purposeful, distinctive design with intent.",
+  "version": "1.1.0",
+  "description": "Production design engine & portable skill for AI coding agents (Claude Code, Cursor, Codex, Antigravity). Interactive CLI wizard, art direction, 6 starting themes, redesign workflows, and WCAG accessibility standards.",
   "type": "module",
   "main": "index.js",
   "types": "index.d.ts",
@@ -11,23 +11,25 @@
   },
   "files": [
     "bin",
+    "lib",
     "skills",
     "adapters",
     "schemas",
     "index.js",
     "index.d.ts",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {
     "wizard": "node bin/cli.js wizard",
     "validate": "node skills/design-with-intent/scripts/validate-skill.js",
     "contrast": "node skills/design-with-intent/scripts/check-contrast.js",
-    "test": "node tools/runner.js",
+    "test": "node --test tests/*.test.js && node tools/runner.js",
     "package": "node tools/package-skill.js",
     "eval:run": "node tools/runner.js",
     "release": "node tools/release.js",
-    "prepublishOnly": "node tools/runner.js && node skills/design-with-intent/scripts/validate-skill.js"
+    "prepublishOnly": "npm test && npm run validate"
   },
   "repository": {
     "type": "git",
@@ -39,12 +41,18 @@
     "design",
     "design-system",
     "ui-ux",
+    "redesign",
+    "themes",
+    "art-direction",
     "accessibility",
     "wcag",
     "antigravity",
     "claude-code",
     "cursor",
-    "codex"
+    "cursor-rules",
+    "codex",
+    "playwright",
+    "visual-testing"
   ],
   "author": "SHEKHAR JAAT <SHEKHAR3512@users.noreply.github.com>",
   "license": "MIT",
@@ -56,6 +64,6 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.3.0"
   }
 }

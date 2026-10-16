@@ -1,236 +1,255 @@
-# Design with Intent
+# 🎯 Design with Intent
 
-> **A portable agent skill, evaluation framework, and interactive design CLI for AI coding agents.**
+[![npm version](https://img.shields.io/npm/v/design-with-intent.svg?color=059669&style=flat-square)](https://www.npmjs.com/package/design-with-intent)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](./LICENSE)
+[![Node Version](https://img.shields.io/badge/node-%3E%3D18.3.0-brightgreen.svg?style=flat-square)](https://nodejs.org)
+[![Agents](https://img.shields.io/badge/agents-Claude%20%7C%20Cursor%20%7C%20Codex%20%7C%20Antigravity-7c3aed.svg?style=flat-square)](#supported-agents)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0%20runtime-success.svg?style=flat-square)](#library-api)
 
-[![npm version](https://img.shields.io/npm/v/design-with-intent.svg?color=cb3837&style=flat-square)](https://www.npmjs.com/package/design-with-intent)
-[![GitHub Release](https://img.shields.io/github/v/release/SHEKHAR3512/design-with-intent?color=2563eb&style=flat-square)](https://github.com/SHEKHAR3512/design-with-intent/releases)
-[![npm downloads](https://img.shields.io/npm/dm/design-with-intent.svg?style=flat-square)](https://www.npmjs.com/package/design-with-intent)
-[![Validation](https://img.shields.io/badge/skill-validated-emerald.svg?style=flat-square)](./skills/design-with-intent/SKILL.md)
-[![WCAG 2.2 AA](https://img.shields.io/badge/accessibility-WCAG%202.2%20AA-blue.svg?style=flat-square)](./skills/design-with-intent/references/web.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](./LICENSE)
+> **The production design engine and portable skill for AI coding agents.**  
+> Stop settling for **AI Slop**—cookie-cutter purple gradients, unreadable contrast, and interchangeable cards. Design with Intent gives **Claude Code**, **Cursor**, **Codex**, and **Google Antigravity** intentional art direction, starting theme recipes, long-term design memory, and WCAG 2.2 AA accessibility guardrails.
 
----
-
-## Overview
-
-AI coding agents frequently generate cookie-cutter user interfaces: monochromatic palettes, generic Inter typography, rounded cards with arbitrary dropshadows, and identical hero banners. When instructed to avoid generic output, models often overcorrect by substituting another uniform stereotype—beige backgrounds with editorial serifs and orange buttons.
-
-**Design with Intent** introduces a disciplined, portable design skill for AI agents.
-
-### The Central Rule
-> **Every major design choice needs an explicit reason connected to the product, audience, content, or medium.**
-> 
-> A blanket ban on purple, gradients, sans-serif fonts, or rounded cards does not solve the problem. The skill challenges unjustified defaults without prohibiting legitimate design choices.
+**The CLI prepares your brief and agent instructions. Your coding agent implements the website changes.** Installing a skill alone does not redesign a site or guarantee good visual results.
 
 ---
 
-## 1. Repository Architecture
+## 🚀 What's New in v1.1.0
 
-The project is structured according to the open Agent Skills specification and modular evaluation design:
+This release introduces major workflows, theme recipes, and automated tooling to elevate AI-generated interfaces:
 
-```
-design-with-intent/
-├── skills/design-with-intent/          # Portable Agent Skill Payload
-│   ├── SKILL.md                        # Canonical concise skill (frontmatter + workflow)
-│   ├── references/                     # On-demand progressive reference guides
-│   │   ├── visual-system.md            # Typography, semantic color tokens, layout, spacing
-│   │   ├── repair.md                   # Brand preservation, scoped interventions, anti-regression
-│   │   ├── web.md                      # Responsive viewports, 6 UI states, WCAG 2.2 AA
-│   │   ├── research.md                 # Three-reference triad, evidence labeling standard
-│   │   └── design-record.md            # Canonical DESIGN.md decision record guide
-│   └── scripts/                        # Deterministic tools
-│       ├── check-contrast.js           # WCAG 2.2 AA relative luminance & contrast checker
-│       ├── validate-skill.js           # Validates word count, links, schemas, & frontmatter
-│       └── touch-target-check.js       # Evaluates target bounding dimensions (>= 24px)
-├── adapters/                           # Agent host integration guides
-│   ├── antigravity/                    # Google Antigravity IDE (.agents/skills)
-│   ├── claude-code/                    # Claude Code (.claude/skills)
-│   ├── codex/                          # OpenAI Codex / System prompt instructions
-│   └── cursor/                         # Cursor Rules (.cursor/rules/)
-├── schemas/                            # JSON Schemas (Draft 2020-12)
-│   ├── design-record.schema.json       # Validates project DESIGN.md records
-│   ├── evaluation.schema.json          # Validates benchmark evaluation runs
-│   └── findings.schema.json            # Validates audit mode findings
-├── evals/                              # Benchmark & Evaluation Suite
-│   ├── rubric.md                       # 6-dimension weighted scoring rubric (0–4 scale)
-│   ├── briefs/                         # 8 diverse, real-world benchmark tasks
-│   │   ├── 01-food-rescue-dashboard.md # High daylight contrast & 48px touch targets
-│   │   ├── 02-travel-calendar.md       # Mountain lodge capacity calendar & pricing
-│   │   ├── 03-music-queue.md           # Accessible queue reordering & now-playing
-│   │   ├── 04-public-service-form.md   # Multi-step welfare form with error recovery
-│   │   ├── 05-cultural-event.md        # Printcraft typography & festival timetable
-│   │   ├── 06-purple-brand-preservation.md # Mandatory purple preservation & contrast fix
-│   │   ├── 07-dense-admin-mobile-repair.md # 8-column manifest table mobile card reflow
-│   │   └── 08-multilingual-rtl-flow.md # Logical CSS properties & RTL bidirectional support
-│   └── fixtures/                       # Interactive working demonstrations
-│       ├── 02-travel-calendar/         # Functional AlpinePass reservation calendar
-│       ├── 06-purple-brand/            # OmniMetrics Cloud telemetry dashboard
-│       └── 07-dense-admin/             # PortOps container manifest terminal
-├── tools/                              # Development & CI tooling
-│   ├── runner.js                       # Comprehensive test & audit runner
-│   └── package-skill.js                # Packages standalone release tarball
-├── reports/                            # Benchmark notes & telemetry records
-│   └── baseline-notes.md               # Methodology, verification conditions & disclosures
-├── package.json                        # Development scripts
-└── LICENSE                             # MIT License
-```
+- 🎨 **Redesign-First Workflow (`--mode redesign`)**: A dedicated mode empowering agents to replace generic template layouts with purposeful, domain-specific designs while strictly safeguarding working business logic, form validation, and explicit brand assets.
+- 🌈 **6 Built-in Theme Recipes (`dwi themes`)**: Complete starting directions (Field Notes, Clean Operations, Cultural Heritage, Warm Editorial, Modern Industrial, Public Service) with verified WCAG 2.2 AA normal-text contrast pairs.
+- 📸 **Responsive Browser Capture & Verification (`dwi capture`)**: Optional Playwright-powered multi-viewport screenshot helper (320px mobile, 768px tablet, 1280px desktop) with automated console error, horizontal overflow, and touch-target diagnostics.
+- 📚 **12 Deep Reference Guides**: Expanded modular references covering art direction, design critique, accessibility boundaries, visual systems, responsive behavior, diagrams, and research.
+- 🤖 **Universal Multi-Agent Auto-Detection**: Instant zero-config installation into `.claude`, `.cursor` (rule + full skill), `.agents`, or `~/.gemini/config/`.
+- 🛡️ **Modular Architecture & Safety**: Refactored core modules (`lib/install.js`, `lib/workflow.js`) with safe non-interactive defaults, piped input support, symlink traversal protection, and automatic file backups (`.backup-*`).
+- 🧪 **22 New Integration & Offline Package Tests**: Guarantees deterministic behavior, offline npm artifact installation, and isolated execution outside the repository tree.
 
 ---
 
-## 2. The 3 Operating Modes
+## ⚡ Quickstart in 30 Seconds
 
-| Mode | Trigger Condition | Agent Behavior |
-| :--- | :--- | :--- |
-| **`Create`** | New product, blank slate, or ground-up redesign | Builds compact brief, compares 2–3 structurally distinct directions, defines semantic tokens, builds representative slice, verifies rendered output. |
-| **`Repair`** | Existing interface feels generic, crowded, low-contrast, or unaligned | Diagnoses defect; preserves existing brand invariants (e.g. signature brand purple) and working business logic; makes the smallest coherent changes. |
-| **`Audit`** | User requests critique, UX review, or accessibility check | Delivers prioritized findings with objective evidence; does not edit code unless requested. |
+From **your website or web application project folder**, run:
 
----
-
-## 3. Project Memory: `DESIGN.md`
-
-To prevent agents from losing context across conversation turns or forgetting client constraints, the skill establishes a root `DESIGN.md` decision record:
-
-```yaml
----
-schema_version: 1
-product: "Product name and purpose"
-audience: "Who uses it and in what environment"
-primary_task: "Single observable outcome user must achieve"
-mode: "create | repair | audit"
-facts: []
-assumptions: []
-preserve: ["Mandated Brand Purple (#6D28D9)"]
-direction:
-  summary: "Chosen structural approach"
-  rationale: "Why it suits the product domain"
-token_source: "src/styles/tokens.css"
-responsive_rules: []
-required_states: []
-references: []
-rejected_options:
-  - option: "Soft pastel badges"
-    reason: "Failed daylight contrast legibility in bright warehouse sunlight"
-verification:
-  performed: []
-  not_performed: []
----
-```
-
----
-
-## 4. Interactive Wizard & Quickstart
-
-Run directly without installing using `npx`:
-
-```bash
-# Launch the full Interactive Setup & Design Wizard:
+```sh
 npx design-with-intent
 ```
 
-The interactive wizard guides you through:
-1. 🚀 **Target Agent Selection**: Installs skill into Google Antigravity, Claude Code, or Cursor.
-2. 📝 **Guided DESIGN.md Creation**: Customizes product name, target audience, primary tasks, and brand invariants.
-3. 🎨 **Interactive Contrast Tester**: Real-time WCAG 2.2 AA/AAA evaluation with visual pass/fail meters.
-4. 📱 **Interactive Touch Target Evaluator**: Evaluates touch button sizes for mobile standards.
-5. 🔍 **Workspace Health Scorecard**: Inspects your project for installed agent rules, schemas, and design tokens.
-6. 📖 **AI Agent Prompt Cheat Sheet**: Ready-to-copy prompts for Create, Repair, and Audit modes.
+*(Or use the installed alias `dwi`)*
 
-### Direct CLI Commands
+The interactive wizard guides you through five quick steps:
 
-```bash
-# 1. Non-interactive install into your current project
-npx design-with-intent install
+1. **Agent Selection**: Auto-detects Claude Code, Cursor, Codex, or Antigravity (or install for all).
+2. **Operating Mode**: Choose **redesign** (existing site), **create** (from scratch), **repair** (fix bug), or **audit** (review).
+3. **Product Context**: Clarify your audience, primary user flow, target screen, and what must stay preserved.
+4. **Visual Direction**: Select one of 6 starting theme recipes or define a custom direction with reference URLs.
+5. **Launch**: Review what will be written, then paste **`DWI-PROMPT.md`** into your AI coding agent.
 
-# Or target a specific host agent:
-npx design-with-intent install antigravity
-npx design-with-intent install claude
-npx design-with-intent install cursor
+The wizard writes `DWI-BRIEF.md` and `DWI-PROMPT.md`. Existing `DESIGN.md` and existing skill files are preserved.
 
-# 2. Initialize a canonical DESIGN.md decision record
-npx design-with-intent record
+---
 
-# 3. Check WCAG 2.2 AA contrast between two colors
-npx design-with-intent contrast "#6D28D9" "#FFFFFF"
+## 🎯 The 4 Operating Modes
 
-# 4. Verify touch target dimensions (>= 24px)
-npx design-with-intent target-size 48 48
+Design with Intent structures agent work into four distinct operational modes:
+
+### 1. 🎨 Redesign Mode (`--mode redesign`)
+Use when an existing website works, but looks generic, cluttered, or amateurish. The agent inspects the page, challenges incidental template styling, and produces a substantial visual transformation while keeping core functionality intact.
+
+```sh
+npx design-with-intent brief --mode redesign --product "Trail Booking" --theme field-notes
 ```
 
-### Programmatic Library Usage
+> **Example Agent Prompt:**  
+> *"Use design-with-intent in redesign mode on our booking page. It's currently a generic hero and card grid. Put trip availability and a route overview at the center of the composition. Preserve the logo, booking flow, prices, and form validation. Reconsider the other colors, typography, and spacing. Show matching before/after screenshots and verify mobile booking."*
 
-```typescript
-import { calculateContrast, checkTargetSize, getSkillPath, getSkillContent, runInteractiveWizard } from 'design-with-intent';
+### 2. 🚀 Create Mode (`--mode create`)
+Use when building a new product or feature from scratch. The agent formulates 2–3 structurally distinct visual directions rooted in a **Reference Triad** (1 direct peer, 1 adjacent domain, 1 real-world physical artifact) before writing code.
 
-// Calculate WCAG 2.2 contrast ratio
-const contrast = calculateContrast('#6D28D9', '#FFFFFF');
-console.log(contrast.ratio); // 7.1
-console.log(contrast.normalTextAA); // true
+```sh
+npx design-with-intent brief --mode create --product "Warehouse Logistics" --theme clean-operations
+```
 
-// Check touch target size (minimum 24px, recommended 44px)
-const target = checkTargetSize(48, 48, true);
-console.log(target.status); // "EXCELLENT"
+### 3. 🛡️ Repair Mode (`--mode repair`)
+Use to fix a specific layout, contrast, or responsiveness defect without altering established brand identity or un-targeted styles.
+
+```sh
+npx design-with-intent brief --mode repair --product "Customer Portal" --problems "Mobile checkout button clips off-screen"
+```
+
+> **Example Agent Prompt:**  
+> *"Use design-with-intent in repair mode to fix the checkout's mobile overflow. Preserve our purple brand (#6D28D9), existing typography, and validation. Verify keyboard submission and the error state."*
+
+### 4. 🔍 Audit Mode (`--mode audit`)
+Use for a thorough heuristic critique and accessibility review. The agent provides evidence-based findings with remediation steps without editing application code.
+
+```sh
+npx design-with-intent prompt audit
 ```
 
 ---
 
-## 5. Releases & GitHub Package Integration
+## 🎨 6 Built-in Theme Recipes
 
-Releases are connected directly between the GitHub repository and npm registry.
+Explore production-grade starting directions with typography pairings and WCAG AA verified color palettes:
 
-### Automated Release Command
+```sh
+# View all theme recipes:
+npx design-with-intent themes
 
-Run the automated release pipeline to test, package, create GitHub Releases with assets, and publish to npm in one command:
-
-```bash
-npm run release
+# Inspect a specific recipe:
+npx design-with-intent themes field-notes
 ```
 
-This automatically:
-1. Executes the 26-point verification test suite (`npm test` and `npm run validate`).
-2. Builds the `.tgz` npm package artifact.
-3. Tags the commit (e.g. `v1.0.2`).
-4. Creates a published **GitHub Release** with changelog and attached `.tgz` package.
-5. Publishes the release to the public **npm registry** with provenance.
+| Theme ID | Aesthetic Character | Typography | Key Palette | Best For |
+| :--- | :--- | :--- | :--- | :--- |
+| **`field-notes`** | Tactical, earthy, research-grade | Editorial Serif + Mono | `#1E3A2B` on `#FAF8F5` | Field research, conservation, documentation |
+| **`clean-operations`** | High-density telemetry & utility | Technical Sans + Mono | `#0F172A` on `#F8FAFC` | Dashboards, logistics, developer tools |
+| **`cultural-heritage`** | Warm editorial, archival, artisanal | Classical Serif + Humanist Sans | `#2C1810` on `#FDFCFA` | Arts, cultural events, culinary, archives |
+| **`warm-editorial`** | Gallery exhibition, luxury publishing | Refined Serif + Minimal Sans | `#1A1A1A` on `#F5F2EB` | Portfolios, magazines, high-end commerce |
+| **`modern-industrial`** | High-contrast, structured precision | Grotesque Sans + Tech Mono | `#18181B` on `#FAFAFA` | Manufacturing, transport, hard-tech |
+| **`public-service`** | Hyper-accessible, calm, utilitarian | High-legibility Sans | `#0B2545` on `#FFFFFF` | Civic forms, healthcare, public institutions |
 
-### CI/CD Workflow
-A GitHub Actions workflow is included at [`.github/workflows/publish.yml`](./.github/workflows/publish.yml). Pushing any tag (`git push origin v*`) or publishing a release on GitHub automatically builds, attaches release artifacts, and publishes to npm.
+Themes are starting points—not rigid templates. Adapt them to real content and explicit brand constraints.
 
 ---
 
-## 5. Development & Testing Commands
+## 💻 CLI Command Reference
 
-The repository includes deterministic testing and verification scripts:
+All commands run via `npx design-with-intent <command>` or `dwi <command>`:
 
-```bash
-# Run complete test and evaluation suite (26/26 tests)
+| Command | Arguments / Options | Description |
+| :--- | :--- | :--- |
+| `wizard` / `setup` | *None* | Launch the interactive guided setup wizard |
+| `install` | `[target]` (`claude`, `cursor`, `codex`, `antigravity`, `all`, `auto`) | Install skill into agent directories (default: `auto`) |
+| `brief` | `--mode`, `--product`, `--audience`, `--task`, `--scope`, `--problems`, `--preserve`, `--theme`, `--force` | Generate `DWI-BRIEF.md` and `DWI-PROMPT.md` without prompts |
+| `prompt` | `[mode]` (`redesign`, `create`, `repair`, `audit`) | Print a reusable prompt template to stdout |
+| `themes` | `[theme-id]` | Browse all 6 starting recipes or display one in detail |
+| `doctor` | *None* | Inspect workspace health, installed skills, and Playwright status |
+| `guide` | *None* | Print guidance on how to activate and prompt the installed skill |
+| `record` | *None* | Initialize a canonical `DESIGN.md` decision record |
+| `capture` | `--url <url>`, `--out <dir>`, `--wait-for <selector>` | Multi-viewport responsive screenshot & diagnostic capture |
+| `contrast` | `<foreground-hex> <background-hex>` | Check WCAG 2.2 AA contrast ratio (exit code 2 on fail) |
+| `target-size` | `<width> <height>` | Check dimensions against 24px minimum & 44px mobile standards |
+| `validate` | *None* | Validate skill structure, reference links, and JSON schemas |
+
+No API keys, accounts, or telemetry required.
+
+---
+
+## 🤖 Supported Agents
+
+Design with Intent is portable and works across all major AI coding agents:
+
+| Agent Target | Installation Destination | Notes |
+| :--- | :--- | :--- |
+| **Cursor** | `.agents/skills/design-with-intent/` + `.cursor/rules/design-with-intent.mdc` | Includes rule routing and full modular references |
+| **Claude Code** | `.claude/skills/design-with-intent/` | Auto-discovered by Claude Code skill loader |
+| **OpenAI Codex** | `.agents/skills/design-with-intent/` | Follows OpenAI Skills SDK standard |
+| **Antigravity** | `.agents/skills/design-with-intent/` (project) or `~/.gemini/config/skills/` (global) | Project-local or global multi-agent workspace |
+| **Auto** | Auto-detects existing `.claude`, `.cursor`, `.agents`, or `.codex` folders | Falls back safely to `.agents/skills/` |
+
+---
+
+## 📸 Browser Evidence & Visual Verification
+
+Use your agent's browser tools or DWI's built-in Playwright capture helper:
+
+```sh
+# 1. Install Playwright if not already in your project:
+npm install -D playwright
+npx playwright install chromium
+
+# 2. Start your local dev server, then capture the baseline:
+npx design-with-intent capture --url http://localhost:5173 --out ./screenshots/before --wait-for main
+
+# 3. After the redesign, capture the updated screens:
+npx design-with-intent capture --url http://localhost:5173 --out ./screenshots/after --wait-for main
+```
+
+**What capture produces:**
+- PNG screenshots at **320px** (mobile), **768px** (tablet), and **1280px** (desktop).
+- `report.json` with console errors, page horizontal overflow detection, and small touch-target candidates.
+
+---
+
+## 🧠 Project Memory: `DESIGN.md`
+
+AI chat sessions lose context. Design with Intent uses a structured **`DESIGN.md`** decision record validated by JSON Schema (`schemas/design-record.schema.json`) to persist invariants:
+
+```yaml
+---
+# DESIGN.md - Design Decision Record
+product: "AlpinePass Trail Booking"
+mode: "redesign"
+date: "2026-10-16"
+facts:
+  - "Core booking flow requires date picker, guest count, and stripe checkout"
+  - "Mobile viewports represent 68% of trail reservation traffic"
+preserve:
+  - "Mandated Brand Green (#1E3A2B) and logo mark"
+  - "Existing checkout API payloads and form validation rules"
+rejected_options:
+  - option: "Sticky bottom CTA with 5 buttons"
+    why: "Failed 44px mobile touch target spacing; caused viewport clipping"
+token_source: "src/styles/tokens.css"
+---
+```
+
+---
+
+## 📦 Library API
+
+For programmatic tools, integrations, and build scripts (Node.js 18.3+, zero dependencies):
+
+```js
+import {
+  getSkillPath,
+  getSkillContent,
+  getReference,
+  getSchema,
+  getDesignRecordTemplate,
+  calculateContrast,
+  checkTargetSize,
+} from 'design-with-intent';
+
+// Access skill content & references
+const skillPath = getSkillPath();
+const artDirectionGuide = getReference('art-direction');
+const designSchema = getSchema('design-record');
+
+// Generate decision record template
+const template = getDesignRecordTemplate({ product: 'Trail Booking', mode: 'redesign' });
+
+// Mathematical accessibility checks
+const contrast = calculateContrast('#1E3A2B', '#FAF8F5');
+console.log(`Contrast ratio: ${contrast.ratio}:1 (Passes AA: ${contrast.passesAA})`);
+
+const touchCheck = checkTargetSize(48, 48);
+console.log(`Meets mobile standards: ${touchCheck.meetsMobile}`);
+```
+
+---
+
+## 🧪 Development & Testing
+
+```sh
+# Run comprehensive test suite (22 unit/integration + 26 evaluation checks)
 npm test
 
 # Validate SKILL.md frontmatter, links, word count, and JSON schemas
 npm run validate
 
-# Check WCAG 2.2 AA contrast ratio between two colors
-npm run contrast -- "#6D28D9" "#FFFFFF"
-
-# Package the standalone portable skill into dist/
+# Package the portable standalone archive
 npm run package
+
+# Verify packed npm tarball contents
+npm pack --dry-run
 ```
 
 ---
 
-## 6. Interactive Fixture Showcase
+## 📄 License & Attribution
 
-The repository contains three reference implementations:
-
-1. **Travel Availability Calendar ([evals/fixtures/02-travel-calendar/](./evals/fixtures/02-travel-calendar/))**
-   - Live interactive calendar with bed capacity status, tabular night pricing, transparent cancellation advisory, and sticky mobile reservation summary.
-2. **Purple SaaS Brand Preservation ([evals/fixtures/06-purple-brand/](./evals/fixtures/06-purple-brand/))**
-   - Demonstrates the Repair mode workflow: deepening button tokens to `#6D28D9` to achieve **7.1:1** contrast while strictly honoring the client's purple brand identity.
-3. **Dense Admin Manifest ([evals/fixtures/07-dense-admin/](./evals/fixtures/07-dense-admin/))**
-   - High-density 8-column desktop logistics table that seamlessly transforms into structured definition cards on mobile viewports below 680px.
-
----
-
-## 7. License
-
-Distributed under the [MIT License](./LICENSE). Copyright (c) 2026 SHEKHAR JAAT (SHEKHAR3512).
+- **Design with Intent** is licensed under the [MIT License](./LICENSE). Copyright (c) 2026 SHEKHAR JAAT (SHEKHAR3512).
+- Selected guidance adapted from [Anthropic frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design), [Composio](https://github.com/composio-community/awesome-codex-skills), and [Owl-Listener](https://github.com/Owl-Listener/designer-skills). Applicable attribution notices are preserved in [`skills/design-with-intent/licenses/`](skills/design-with-intent/licenses/) and documented in [`sources.md`](skills/design-with-intent/references/sources.md).

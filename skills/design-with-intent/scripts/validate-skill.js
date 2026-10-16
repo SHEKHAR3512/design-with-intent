@@ -11,7 +11,8 @@ import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '../../..');
+const skillDir = path.resolve(__dirname, '..');
+const rootDir = path.resolve(skillDir, '../..');
 
 let errors = [];
 let warnings = [];
@@ -21,7 +22,7 @@ console.log("Validating 'design-with-intent' Skill");
 console.log("=========================================\n");
 
 // 1. Check SKILL.md
-const skillPath = path.join(rootDir, 'skills/design-with-intent/SKILL.md');
+const skillPath = path.join(skillDir, 'SKILL.md');
 if (!fs.existsSync(skillPath)) {
   errors.push(`Missing core skill file: ${skillPath}`);
 } else {
@@ -72,16 +73,31 @@ const expectedReferences = [
   'repair.md',
   'web.md',
   'research.md',
-  'design-record.md'
+  'design-record.md', 'art-direction.md', 'themes.md', 'critique.md',
+  'browser-testing.md', 'accessibility.md', 'diagrams.md', 'sources.md'
 ];
 
 for (const ref of expectedReferences) {
-  const refPath = path.join(rootDir, 'skills/design-with-intent/references', ref);
+  const refPath = path.join(skillDir, 'references', ref);
   if (!fs.existsSync(refPath)) {
     errors.push(`Missing required reference: ${refPath}`);
   } else {
     console.log(`✓ Reference found: references/${ref}`);
   }
+}
+
+// Follow relative links in references too; install must carry its entire payload.
+for (const ref of fs.readdirSync(path.join(skillDir, 'references')).filter(f => f.endsWith('.md'))) {
+  const file = path.join(skillDir, 'references', ref);
+  const body = fs.readFileSync(file, 'utf8');
+  for (const match of body.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)) {
+    const target = match[1].split('#')[0];
+    if (!target || /^[a-z]+:/i.test(target)) continue;
+    if (!fs.existsSync(path.resolve(path.dirname(file), target))) errors.push(`Broken link in ${ref}: ${target}`);
+  }
+}
+for (const asset of ['assets/themes.json', 'licenses/Apache-2.0.txt', 'licenses/Owl-Listener-MIT.txt', 'scripts/capture.mjs']) {
+  if (!fs.existsSync(path.join(skillDir, asset))) errors.push(`Missing bundled resource: ${asset}`);
 }
 
 // 3. Check JSON Schemas
@@ -94,7 +110,7 @@ const expectedSchemas = [
 for (const sch of expectedSchemas) {
   const schPath = path.join(rootDir, 'schemas', sch);
   if (!fs.existsSync(schPath)) {
-    errors.push(`Missing schema: ${schPath}`);
+    if (fs.existsSync(path.join(rootDir, 'package.json')) && fs.existsSync(path.join(rootDir, 'skills/design-with-intent'))) errors.push(`Missing schema: ${schPath}`);
   } else {
     try {
       const data = fs.readFileSync(schPath, 'utf8');
@@ -109,7 +125,7 @@ for (const sch of expectedSchemas) {
 // 4. Check Rubric and Evals
 const rubricPath = path.join(rootDir, 'evals/rubric.md');
 if (!fs.existsSync(rubricPath)) {
-  warnings.push(`Rubric not yet present: ${rubricPath}`);
+  // The portable skill intentionally excludes development evaluation fixtures.
 } else {
   console.log("✓ Rubric found: evals/rubric.md");
 }

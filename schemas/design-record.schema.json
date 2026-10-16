@@ -34,7 +34,7 @@
     },
     "mode": {
       "type": "string",
-      "enum": ["create", "repair", "audit"],
+      "enum": ["create", "redesign", "repair", "audit"],
       "description": "Active operational mode"
     },
     "facts": {

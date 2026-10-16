@@ -11,7 +11,7 @@ In multi-turn agent interactions or team collaboration:
 - When asked to "fix padding", an agent might re-generate the entire page with completely different colors and typography.
 - Users waste time repeatedly correcting the same aesthetic choices.
 
-`DESIGN.md` acts as a single, unambiguous source of design truth committed directly into the repository.
+`DESIGN.md` stores durable design decisions. The wizard creates `DWI-BRIEF.md` as incoming user context and `DWI-PROMPT.md` as an invocation prompt; neither is proof that a design decision was implemented. Reconcile the brief with this record, with current user instructions taking precedence. Preserve useful decisions and resolve conflicting explicit constraints before changing them.
 
 ---
 
@@ -25,7 +25,7 @@ schema_version: 1
 product: "OpenRescue Dispatch"
 audience: "Volunteer food rescue coordinators working in noisy, time-sensitive warehouse environments on tablets and phones"
 primary_task: "Identify donations expiring within 2 hours and assign active drivers with a single tap"
-mode: "create" # create | repair | audit
+mode: "create" # create | redesign | repair | audit
 
 facts:
   - "[FACT] Must operate offline-first with local storage"

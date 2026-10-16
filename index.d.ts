@@ -27,7 +27,7 @@ export function getDesignRecordTemplate(overrides?: {
   product?: string;
   audience?: string;
   primary_task?: string;
-  mode?: 'create' | 'repair' | 'audit';
+  mode?: 'create' | 'redesign' | 'repair' | 'audit';
   preserve?: string | string[];
   direction_summary?: string;
   direction_rationale?: string;

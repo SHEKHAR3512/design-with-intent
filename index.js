@@ -69,12 +69,13 @@ export function getDesignRecordTemplate(overrides = {}) {
   const audience = overrides.audience || 'Target users';
   const primaryTask = overrides.primary_task || 'Primary user outcome';
   const mode = overrides.mode || 'create';
+  if (!['create', 'redesign', 'repair', 'audit'].includes(mode)) throw new Error(`Unknown mode: ${mode}`);
   const preserve = Array.isArray(overrides.preserve)
     ? overrides.preserve
     : (overrides.preserve ? [overrides.preserve] : []);
 
   const preserveYaml = preserve.length > 0
-    ? '\n' + preserve.map(item => `  - "${item}"`).join('\n')
+    ? '\n' + preserve.map(item => `  - ${JSON.stringify(String(item))}`).join('\n')
     : ' []';
 
   const summary = overrides.direction_summary || (overrides.direction && overrides.direction.summary) || 'Purposeful visual approach';
@@ -83,20 +84,20 @@ export function getDesignRecordTemplate(overrides = {}) {
 
   return `---
 schema_version: 1
-product: "${product}"
-audience: "${audience}"
-primary_task: "${primaryTask}"
-mode: "${mode}"
+product: ${JSON.stringify(product)}
+audience: ${JSON.stringify(audience)}
+primary_task: ${JSON.stringify(primaryTask)}
+mode: ${JSON.stringify(mode)}
 
 facts: []
 assumptions: []
 preserve:${preserveYaml}
 
 direction:
-  summary: "${summary}"
-  rationale: "${rationale}"
+  summary: ${JSON.stringify(summary)}
+  rationale: ${JSON.stringify(rationale)}
 
-token_source: "${tokenSource}"
+token_source: ${JSON.stringify(tokenSource)}
 responsive_rules:
   - "320px–480px: Single-column reflow without horizontal scroll"
   - "768px+: Multi-column layout"

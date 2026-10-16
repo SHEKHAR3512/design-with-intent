@@ -74,17 +74,19 @@ try {
 }
 
 // 6. Create GitHub Release using gh CLI
-const releaseTitle = `${tagName} — Interactive CLI Wizard & GitHub Release Integration`;
+const releaseTitle = `${tagName} — Redesign Workflow, 6 Built-in Themes & Browser Verification`;
 const releaseNotes = `### Design with Intent ${tagName}
 
-Portable agent skill, evaluation framework, and interactive design CLI for AI coding agents.
+Production design engine, portable agent skill, and interactive CLI for AI coding agents (Claude Code, Cursor, Codex, Antigravity).
 
-#### What's New in this Release:
-- **Interactive Terminal Wizard**: Run \`npx design-with-intent\` with no arguments to launch an interactive setup wizard.
-- **Interactive WCAG 2.2 AA Contrast Checker**: Test color pairs with visual pass/fail badges.
-- **Interactive Touch Target Checker**: Verify 24px minimums and 44px mobile touch standards.
-- **Workspace Health Audit Scorecard**: Scans workspace for agent skills, \`DESIGN.md\`, and CSS token files.
-- **Automated GitHub Release & npm Package Sync**: Connected GitHub repository releases directly with npm packages.
+#### 🚀 What's New in this Release:
+- **Redesign-First Workflow**: Dedicated workflow to transform generic AI templates into distinctive, purposeful products while strictly protecting working business logic, flows, and explicit brand assets.
+- **6 Built-in Theme Recipes**: Field Notes, Clean Operations, Cultural Heritage, Warm Editorial/Gallery, Modern Industrial, and Public Service — pre-tested for WCAG AA normal-text contrast.
+- **Modular Core Architecture**: Refactored internal architecture into clean modules (\`lib/install.js\`, \`lib/workflow.js\`) with safe non-interactive defaults, atomic backups (\`.backup-*\`), and symlink protection.
+- **12 Comprehensive Reference Guides**: Modular references covering art direction, design critique, accessibility boundaries, visual systems, browser testing, and diagrams.
+- **Responsive Browser Capture**: Multi-viewport screenshot generation (320px, 768px, 1280px) and automated DOM inspection for overflow and touch target defects.
+- **Universal Multi-Agent Support**: Automatic detection and installation for Claude Code, Cursor (rule + full skill), Codex, and Antigravity.
+- **22 Integration & Offline Package Tests**: Comprehensive automated test coverage guaranteeing offline npm installation and isolated execution.
 
 #### Links:
 - **npm Registry**: [https://www.npmjs.com/package/design-with-intent](https://www.npmjs.com/package/design-with-intent)

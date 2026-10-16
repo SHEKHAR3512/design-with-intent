@@ -7,120 +7,53 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { calculateContrast, checkTargetSize, getSkillDir, getDesignRecordTemplate } from '../index.js';
-import { runInteractiveWizard } from './wizard.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootPkgDir = path.resolve(__dirname, '..');
+import { runInteractiveWizard, printInstallResults, showThemes, showDoctor, showGuide } from './wizard.js';
+import { installSkill } from '../lib/install.js';
+import { saveBrief, getPrompt, getTheme, inspectProject } from '../lib/workflow.js';
+import { parseArgs } from 'node:util';
+import { spawnSync } from 'node:child_process';
 
 const args = process.argv.slice(2);
 const command = args[0] ? args[0].toLowerCase() : (process.stdin.isTTY ? 'wizard' : 'help');
 
-function copyDirRecursive(src, dest) {
-  fs.mkdirSync(dest, { recursive: true });
-  const entries = fs.readdirSync(src, { withFileTypes: true });
-
-  for (const entry of entries) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
-
-    if (entry.isDirectory()) {
-      copyDirRecursive(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
-    }
-  }
-}
-
 function showHelp() {
   console.log(`
-\x1b[1mDesign with Intent\x1b[0m — Portable Agent Skill & Design Tooling
+Design with Intent — guided design workflow for coding agents
 
-\x1b[36mUSAGE:\x1b[0m
-  $ npx design-with-intent [command] [options]
-  $ dwi [command] [options]
+Run from your website project: npx design-with-intent
 
-\x1b[35mINTERACTIVE WIZARD:\x1b[0m
-  $ npx design-with-intent        \x1b[32mLaunch interactive setup & design wizard\x1b[0m
-  $ dwi wizard                    \x1b[32mInteractive menu (contrast, targets, health)\x1b[0m
+  wizard / setup             Guided installation, brief, and ready-to-paste prompt
+  install [target] [--force]  auto | codex | claude | cursor | antigravity | all | global
+  brief [options]            Write DWI-BRIEF.md and DWI-PROMPT.md
+  prompt [mode]              Print an agent prompt (default: redesign)
+  themes [id]                Explore bundled visual directions
+  doctor                     Check setup (not visual quality)
+  guide                      Learn the workflow
+  record                     Create DESIGN.md if absent
+  capture [options]          Capture responsive screenshots with optional Playwright
+  contrast <fg> <bg>          Check one color pair
+  target-size <w> <h>         Check target dimensions
+  validate                   Validate the bundled skill files and links
+  help                       Show this guide
 
-\x1b[36mCOMMANDS:\x1b[0m
-  \x1b[1minstall\x1b[0m [target]        Install the skill into your project or environment
-                          Targets: antigravity | claude | cursor | global | all (default: auto-detect)
-  \x1b[1mrecord\x1b[0m                  Create a canonical DESIGN.md decision record in current directory
-  \x1b[1mcontrast\x1b[0m <fg> <bg>      Calculate WCAG 2.2 AA contrast ratio between two hex/rgb colors
-  \x1b[1mtarget-size\x1b[0m <w> <h>     Verify target dimensions against WCAG 2.2 AA (>= 24px)
-  \x1b[1mwizard\x1b[0m                  Launch the interactive terminal wizard
-  \x1b[1mvalidate\x1b[0m                Validate the skill files or current directory DESIGN.md
-  \x1b[1mhelp\x1b[0m                    Show this help message
+Modes: redesign | create | repair | audit
+Brief options: --mode --product --audience --task --scope --problems
+               --preserve --references --theme (default: custom) --force
+Quote values containing spaces. --force creates backups before replacing files.
 
-\x1b[36mEXAMPLES:\x1b[0m
-  $ npx design-with-intent
-  $ npx design-with-intent install antigravity
-  $ npx design-with-intent install claude
-  $ npx design-with-intent install cursor
-  $ npx design-with-intent record
-  $ npx design-with-intent contrast "#6D28D9" "#FFFFFF"
-  $ npx design-with-intent target-size 48 48
+Examples:
+  npx design-with-intent install cursor
+  npx design-with-intent brief --mode redesign --product "Trail booking" --theme field-notes
+  npx design-with-intent prompt redesign
+
+The CLI prepares guidance. Paste DWI-PROMPT.md into your agent to implement the UI.
 `);
 }
 
-function cmdInstall(targetArg) {
-  const cwd = process.cwd();
-  const skillSrc = getSkillDir();
-  const target = targetArg ? targetArg.toLowerCase() : 'auto';
-
-  console.log(`\x1b[1mInstalling Design with Intent skill...\x1b[0m`);
-
-  let installed = 0;
-
-  // 1. Antigravity (.agents/skills/design-with-intent)
-  if (target === 'antigravity' || target === 'all' || target === 'auto' || fs.existsSync(path.join(cwd, '.agents'))) {
-    const dest = path.join(cwd, '.agents/skills/design-with-intent');
-    copyDirRecursive(skillSrc, dest);
-    console.log(`\x1b[32m✓ Installed for Antigravity IDE:\x1b[0m ${path.relative(cwd, dest)}`);
-    installed++;
-  }
-
-  // 2. Claude Code (.claude/skills/design-with-intent)
-  if (target === 'claude' || target === 'all' || (target === 'auto' && fs.existsSync(path.join(cwd, '.claude')))) {
-    const dest = path.join(cwd, '.claude/skills/design-with-intent');
-    copyDirRecursive(skillSrc, dest);
-    console.log(`\x1b[32m✓ Installed for Claude Code:\x1b[0m ${path.relative(cwd, dest)}`);
-    installed++;
-  }
-
-  // 3. Cursor (.cursor/rules/design-with-intent.mdc)
-  if (target === 'cursor' || target === 'all' || (target === 'auto' && fs.existsSync(path.join(cwd, '.cursor')))) {
-    const mdcSrc = path.join(rootPkgDir, 'adapters/cursor/design-with-intent.mdc');
-    const destDir = path.join(cwd, '.cursor/rules');
-    fs.mkdirSync(destDir, { recursive: true });
-    fs.copyFileSync(mdcSrc, path.join(destDir, 'design-with-intent.mdc'));
-    console.log(`\x1b[32m✓ Installed Cursor rule:\x1b[0m .cursor/rules/design-with-intent.mdc`);
-    installed++;
-  }
-
-  // 4. Global Antigravity (~/.gemini/config/skills/design-with-intent)
-  if (target === 'global') {
-    const homedir = process.env.HOME || process.env.USERPROFILE || '';
-    if (homedir) {
-      const globalDest = path.join(homedir, '.gemini/config/skills/design-with-intent');
-      copyDirRecursive(skillSrc, globalDest);
-      console.log(`\x1b[32m✓ Installed globally in:\x1b[0m ${globalDest}`);
-      installed++;
-    }
-  }
-
-  if (installed === 0 && target === 'auto') {
-    // Default fallback: create .agents/skills/design-with-intent
-    const dest = path.join(cwd, '.agents/skills/design-with-intent');
-    copyDirRecursive(skillSrc, dest);
-    console.log(`\x1b[32m✓ Installed to:\x1b[0m ${path.relative(cwd, dest)}`);
-  }
-
-  console.log(`\n\x1b[1;32mInstallation complete!\x1b[0m Your agent can now use the 'design-with-intent' skill.`);
+function cmdInstall(target) {
+  printInstallResults(installSkill({ target: target || 'auto', force: args.includes('--force') }));
+  console.log('Next: dwi wizard for a project brief, or dwi prompt redesign.');
 }
 
 function cmdRecord() {
@@ -196,44 +129,79 @@ function cmdTargetSize() {
   }
 }
 
-// Router
-switch (command) {
-  case 'wizard':
-  case 'interactive':
-  case '-i':
-  case '--interactive':
-  case 'setup':
-  case 'ui':
-    await runInteractiveWizard();
-    break;
-  case 'install':
-    cmdInstall(args[1]);
-    break;
-  case 'init':
-    if (!args[1] && process.stdin.isTTY) {
+// Reject unknown options instead of silently claiming success.
+try {
+  const maxArgs = { prompt: 1, themes: 1, doctor: 0, guide: 0, record: 0, validate: 0, help: 0, wizard: 0, setup: 0, ui: 0, interactive: 0, contrast: 2, 'check-contrast': 2, 'target-size': 2, target: 2 };
+  if (command in maxArgs && args.length - 1 > maxArgs[command]) throw new Error('Too many arguments. Run dwi help.');
+  const noOptions = ['prompt', 'themes', 'doctor', 'guide', 'record', 'validate', 'help', 'wizard', 'setup', 'ui', 'interactive', 'contrast', 'check-contrast', 'target-size', 'target'];
+  if (noOptions.includes(command) && args.slice(1).some(a => a.startsWith('--'))) throw new Error('Unknown option. Run dwi help.');
+  if (['install', 'init'].includes(command)) {
+    const extra = args.slice(1).filter(a => a !== '--force');
+    if (extra.length > 1 || extra.some(a => a.startsWith('-'))) throw new Error('Usage: dwi install [target] [--force]');
+  }
+  switch (command) {
+    case 'wizard':
+    case 'interactive':
+    case '-i':
+    case '--interactive':
+    case 'setup':
+    case 'ui':
       await runInteractiveWizard();
-    } else {
-      cmdInstall(args[1]);
+      break;
+    case 'install':
+      cmdInstall(args.slice(1).find(a => a !== '--force'));
+      break;
+    case 'init':
+      if (!args[1] && process.stdin.isTTY) {
+        await runInteractiveWizard();
+      } else {
+        cmdInstall(args.slice(1).find(a => a !== '--force'));
+      }
+      break;
+    case 'brief': {
+      const names = ['mode', 'product', 'audience', 'task', 'scope', 'problems', 'preserve', 'references', 'theme'];
+      const { values } = parseArgs({ args: args.slice(1), options: { ...Object.fromEntries(names.map(n => [n, { type: 'string' }])), force: { type: 'boolean' } }, strict: true });
+      for (const result of saveBrief({ product: inspectProject().product, ...values })) console.log(`${result.status}: ${path.basename(result.file)}${result.backup ? ` (backup: ${path.basename(result.backup)})` : ''}`);
+      console.log('Paste DWI-PROMPT.md into your coding agent. Install the skill first with dwi install if needed.');
+      break;
     }
-    break;
-  case 'record':
-    cmdRecord();
-    break;
-  case 'contrast':
-  case 'check-contrast':
-    cmdContrast();
-    break;
-  case 'target-size':
-  case 'target':
-    cmdTargetSize();
-    break;
-  case 'validate':
-    import('../skills/design-with-intent/scripts/validate-skill.js');
-    break;
-  case 'help':
-  case '--help':
-  case '-h':
-  default:
-    showHelp();
-    break;
+    case 'prompt': console.log(getPrompt(args[1])); break;
+    case 'themes':
+      if (args[1]) console.log(JSON.stringify(getTheme(args[1]), null, 2));
+      else showThemes();
+      break;
+    case 'doctor': showDoctor(); break;
+    case 'guide': showGuide(); break;
+    case 'capture': {
+      const result = spawnSync(process.execPath, [path.join(getSkillDir(), 'scripts/capture.mjs'), ...args.slice(1)], { stdio: 'inherit' });
+      if (result.error) throw result.error;
+      process.exitCode = result.status ?? 1;
+      break;
+    }
+    case 'record':
+      cmdRecord();
+      break;
+    case 'contrast':
+    case 'check-contrast':
+      cmdContrast();
+      break;
+    case 'target-size':
+    case 'target':
+      cmdTargetSize();
+      break;
+    case 'validate':
+      await import('../skills/design-with-intent/scripts/validate-skill.js');
+      break;
+    case 'help':
+    case '--help':
+    case '-h':
+      showHelp();
+      break;
+    default:
+      throw new Error(`Unknown command \"${command}\". Run dwi help.`);
+  }
+
+} catch (error) {
+  console.error(`Error: ${error.message}`);
+  process.exitCode = 1;
 }

@@ -9,7 +9,7 @@ This guide defines the principles and concrete specifications for establishing a
 Typography is the backbone of interface comprehension. It conveys voice, establishes reading order, and determines cognitive load.
 
 ### 1.1 Role-Based Type Scale
-Instead of assigning arbitrary font sizes, map every text element to a semantic type role:
+Map text to semantic roles. The values below are starting examples for application UI, not a universal scale or a maximum display size. Choose a scale that expresses the product direction and survives real content and mobile reflow:
 
 | Role | Typical Size | Line Height | Weight | Intended Usage |
 | :--- | :--- | :--- | :--- | :--- |
@@ -51,7 +51,7 @@ Define your design tokens using semantic roles rather than literal color names:
 - **Text & Content (`--text-*`):**
   - `--text-primary`: Primary headings, body copy, active inputs (Contrast >= 7:1 against base).
   - `--text-secondary`: Supporting labels, metadata, icons (Contrast >= 4.5:1).
-  - `--text-muted`: Placeholders, disabled text (Contrast >= 3:1 for non-essential info).
+  - `--text-muted`: Supporting text and placeholders (normally >= 4.5:1). Inactive controls have contrast exceptions; do not apply those exceptions to useful helper text.
   - `--text-inverse`: Text on primary colored buttons or dark tooltips.
 - **Interactive Actions (`--action-*`):**
   - `--action-primary`: The primary call-to-action button or link.
@@ -66,9 +66,9 @@ Define your design tokens using semantic roles rather than literal color names:
 
 ### 2.2 Contrast & Multi-Attribute Feedback
 - **WCAG 2.2 AA Baseline:**
-  - Standard text (< 18pt / 24px regular, < 14pt / 18.5px bold): **Minimum 4.5:1** contrast ratio against its background.
-  - Large text (>= 24px regular or >= 18.5px bold): **Minimum 3:1** contrast ratio.
-  - UI components and graphical objects (borders, checkboxes, focus rings): **Minimum 3:1** contrast against adjacent colors.
+  - Standard text (< 18pt / 24px regular, < 14pt / 18.67px bold): **Minimum 4.5:1** contrast ratio against its background.
+  - Large text (>= 24px regular or >= 18.67px bold): **Minimum 3:1** contrast ratio.
+  - Visual information necessary to identify UI components and meaningful graphical objects: **Minimum 3:1** against adjacent colors. Not every decorative border is required to meet that threshold.
 - **Non-Color Indicators (WCAG 1.4.1):**
   Never communicate critical status through color alone. Always pair status colors with:
   1. A recognizable SVG icon (e.g., checkmark, warning triangle, exclamation circle).
@@ -109,7 +109,7 @@ Every interactive element must provide continuous sensory feedback:
 2. **Hover:** Subtle brightness, shadow elevation, or background shift indicating readiness.
 3. **Focus-Visible:** Unobscured, high-contrast focus indicator (e.g., `outline: 2px solid var(--action-focus-ring); outline-offset: 2px;`) for keyboard navigation. Never suppress `:focus` outlines without replacing them with `:focus-visible` styling!
 4. **Active / Pressed:** Physical depression feedback (e.g., `transform: scale(0.98)` or deeper background tint).
-5. **Disabled:** Reduced opacity (0.5–0.6), cursor `not-allowed`, and `aria-disabled="true"`. Note: Provide clear tooltips or helper text explaining why an action is disabled.
+5. **Disabled:** Use native `disabled` where appropriate. `aria-disabled="true"` communicates state but does not prevent activation; custom controls must also suppress activation. Keep explanatory text readable and available without hover. Do not prescribe opacity that makes necessary information illegible.
 
 ### 4.2 Target Sizes (WCAG 2.2 AA 2.5.8)
 - All interactive targets must have a minimum bounding size of **24×24 CSS pixels**, or sufficient spacing so that a 24px diameter circle centered on the target does not intersect adjacent targets.

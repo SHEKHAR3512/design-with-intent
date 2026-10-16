@@ -1,22 +1,16 @@
 ---
-description: Design with Intent Cursor Rule - enforce product-grounded design, brand preservation, and WCAG 2.2 AA accessibility.
+description: Use Design with Intent for UI creation, substantial visual redesign, focused repairs, and evidenced audits.
 globs: **/*.{html,css,tsx,jsx,vue,svelte}
 alwaysApply: false
 ---
 
-# Design with Intent — Cursor Rule
+# Design with Intent
 
-When generating, repairing, or auditing web UI:
+Read the complete skill at `.agents/skills/design-with-intent/SKILL.md`, installed alongside this rule, and the relevant references it links. Read `DWI-BRIEF.md` and `DESIGN.md` if present; current user instructions take precedence.
 
-1. **The Central Rule:** Every major design choice must have a concrete reason connected to the product, audience, content, or medium. Do not replace purple with generic beige/serif.
-2. **Mode Routing:**
-   - **Create:** Establish brief, compare 2 directions, define tokens, implement representative slice.
-   - **Repair:** Preserve existing brand colors (e.g. purple, blue) and working business logic. Make the smallest coherent changes.
-   - **Audit:** Provide prioritized findings with objective contrast/viewport evidence; do not edit code unless requested.
-3. **Accessibility Baseline (WCAG 2.2 AA):**
-   - Text contrast >= 4.5:1 (normal) or >= 3.0:1 (large text).
-   - Target sizes >= 24×24 CSS px (recommend 44px on mobile).
-   - Never communicate status by color alone (pair with text or icon).
-   - Visible keyboard `:focus-visible` indicators.
-4. **Responsive Reflow:** Check 320px width reflow without horizontal scrolling.
-5. **Project Memory:** Record decisions and rejected options in `DESIGN.md`.
+- **Redesign:** A generic existing site needing substantial visual change. Change composition, type treatment, and color roles where allowed; preserve explicit brand constraints and working behavior. Compare matching before/after screenshots when browser tools are available.
+- **Create:** A new screen or flow. Compare product-specific directions, choose one, implement, and verify.
+- **Repair:** A specific defect or limited polish. Preserve the established visual system and keep changes scoped.
+- **Audit:** Evidence-based critique; do not edit application code.
+
+Do not route all existing projects to repair mode. Existing template CSS is not automatically a protected brand requirement. The complete workflow, theme recipes, browser helper, and accessibility guidance are in the installed skill directory.

@@ -2,11 +2,13 @@
 
 This guide explains how to repair, clarify, and elevate existing interfaces without breaking brand identity, user habits, or application logic.
 
+Use this guide for targeted repairs. An explicit request to transform a generic existing design belongs in **redesign** mode; do not apply minimal-change constraints to that request.
+
 ---
 
 ## 1. The Repair Mindset: Surgical Precision
 
-When an agent is asked to "improve", "fix", or "polish" a screen, the most common failure mode is an unrequested ground-up redesign:
+For a focused defect or polish request, the most common failure mode is an unrequested ground-up redesign:
 - Deleting the existing brand color palette and replacing it with generic dark mode or trendy editorial beige.
 - Swapping working UI components with incompatible new structures.
 - Breaking functional state handlers, forms, and business logic.
