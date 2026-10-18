@@ -1,7 +1,7 @@
 {
   "name": "design-with-intent",
-  "version": "1.1.0",
-  "description": "Production design engine & portable skill for AI coding agents (Claude Code, Cursor, Codex, Antigravity). Interactive CLI wizard, art direction, 6 starting themes, redesign workflows, and WCAG accessibility standards.",
+  "version": "1.2.0",
+  "description": "Guided design studio and portable agent skill: premium interface craft, purposeful motion, seven visual directions, and an interactive project brief.",
   "type": "module",
   "main": "index.js",
   "types": "index.d.ts",
@@ -29,7 +29,8 @@
     "package": "node tools/package-skill.js",
     "eval:run": "node tools/runner.js",
     "release": "node tools/release.js",
-    "prepublishOnly": "npm test && npm run validate"
+    "prepublishOnly": "npm test && npm run validate",
+    "postinstall": "node bin/postinstall.js"
   },
   "repository": {
     "type": "git",

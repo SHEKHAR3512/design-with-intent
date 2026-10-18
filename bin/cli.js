@@ -13,6 +13,7 @@ import { installSkill } from '../lib/install.js';
 import { saveBrief, getPrompt, getTheme, inspectProject } from '../lib/workflow.js';
 import { parseArgs } from 'node:util';
 import { spawnSync } from 'node:child_process';
+import { motionCSS } from '../lib/design-profile.js';
 
 const args = process.argv.slice(2);
 const command = args[0] ? args[0].toLowerCase() : (process.stdin.isTTY ? 'wizard' : 'help');
@@ -28,6 +29,7 @@ Run from your website project: npx design-with-intent
   brief [options]            Write DWI-BRIEF.md and DWI-PROMPT.md
   prompt [mode]              Print an agent prompt (default: redesign)
   themes [id]                Explore bundled visual directions
+  motion [profile]           Print CSS motion tokens (restrained | expressive | minimal)
   doctor                     Check setup (not visual quality)
   guide                      Learn the workflow
   record                     Create DESIGN.md if absent
@@ -40,6 +42,7 @@ Run from your website project: npx design-with-intent
 Modes: redesign | create | repair | audit
 Brief options: --mode --product --audience --task --scope --problems
                --preserve --references --theme (default: custom) --force
+               --personality --assets --avoid --motion (default: restrained)
 Quote values containing spaces. --force creates backups before replacing files.
 
 Examples:
@@ -132,6 +135,7 @@ function cmdTargetSize() {
 // Reject unknown options instead of silently claiming success.
 try {
   const maxArgs = { prompt: 1, themes: 1, doctor: 0, guide: 0, record: 0, validate: 0, help: 0, wizard: 0, setup: 0, ui: 0, interactive: 0, contrast: 2, 'check-contrast': 2, 'target-size': 2, target: 2 };
+  maxArgs.motion = 1;
   if (command in maxArgs && args.length - 1 > maxArgs[command]) throw new Error('Too many arguments. Run dwi help.');
   const noOptions = ['prompt', 'themes', 'doctor', 'guide', 'record', 'validate', 'help', 'wizard', 'setup', 'ui', 'interactive', 'contrast', 'check-contrast', 'target-size', 'target'];
   if (noOptions.includes(command) && args.slice(1).some(a => a.startsWith('--'))) throw new Error('Unknown option. Run dwi help.');
@@ -159,13 +163,14 @@ try {
       }
       break;
     case 'brief': {
-      const names = ['mode', 'product', 'audience', 'task', 'scope', 'problems', 'preserve', 'references', 'theme'];
+      const names = ['mode', 'product', 'audience', 'task', 'scope', 'problems', 'preserve', 'references', 'theme', 'personality', 'assets', 'avoid', 'motion'];
       const { values } = parseArgs({ args: args.slice(1), options: { ...Object.fromEntries(names.map(n => [n, { type: 'string' }])), force: { type: 'boolean' } }, strict: true });
       for (const result of saveBrief({ product: inspectProject().product, ...values })) console.log(`${result.status}: ${path.basename(result.file)}${result.backup ? ` (backup: ${path.basename(result.backup)})` : ''}`);
       console.log('Paste DWI-PROMPT.md into your coding agent. Install the skill first with dwi install if needed.');
       break;
     }
     case 'prompt': console.log(getPrompt(args[1])); break;
+    case 'motion': console.log(motionCSS(args[1])); break;
     case 'themes':
       if (args[1]) console.log(JSON.stringify(getTheme(args[1]), null, 2));
       else showThemes();

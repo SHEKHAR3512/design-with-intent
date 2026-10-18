@@ -13,17 +13,14 @@
 
 ---
 
-## 🚀 What's New in v1.1.0
+## What's new in v1.2.0
 
-This release introduces major workflows, theme recipes, and automated tooling to elevate AI-generated interfaces:
-
-- 🎨 **Redesign-First Workflow (`--mode redesign`)**: A dedicated mode empowering agents to replace generic template layouts with purposeful, domain-specific designs while strictly safeguarding working business logic, form validation, and explicit brand assets.
-- 🌈 **6 Built-in Theme Recipes (`dwi themes`)**: Complete starting directions (Field Notes, Clean Operations, Cultural Heritage, Warm Editorial, Modern Industrial, Public Service) with verified WCAG 2.2 AA normal-text contrast pairs.
-- 📸 **Responsive Browser Capture & Verification (`dwi capture`)**: Optional Playwright-powered multi-viewport screenshot helper (320px mobile, 768px tablet, 1280px desktop) with automated console error, horizontal overflow, and touch-target diagnostics.
-- 📚 **12 Deep Reference Guides**: Expanded modular references covering art direction, design critique, accessibility boundaries, visual systems, responsive behavior, diagrams, and research.
-- 🤖 **Universal Multi-Agent Auto-Detection**: Instant zero-config installation into `.claude`, `.cursor` (rule + full skill), `.agents`, or `~/.gemini/config/`.
-- 🛡️ **Modular Architecture & Safety**: Refactored core modules (`lib/install.js`, `lib/workflow.js`) with safe non-interactive defaults, piped input support, symlink traversal protection, and automatic file backups (`.backup-*`).
-- 🧪 **22 New Integration & Offline Package Tests**: Guarantees deterministic behavior, offline npm artifact installation, and isolated execution outside the repository tree.
+- **A guided terminal design studio:** five stages, useful defaults, a review screen, and actionable next steps.
+- **A richer brief:** design personality, available content, visual habits to avoid, and motion preference accompany your product goals.
+- **Premium craft and purposeful motion:** focused adaptations of [Emil Kowalski's skills](https://github.com/emilkowalski/skills), with attribution and the upstream MIT notice included.
+- **Seven visual directions:** the new **Precision** recipe emphasizes product detail, careful typography, and restraint without copying Apple branding.
+- **Three motion profiles:** restrained, expressive, and minimal. Export optional CSS tokens with `dwi motion restrained`.
+- **Install welcome:** a non-blocking hint points users to the setup wizard. No API key or runtime dependencies are required.
 
 ---
 
@@ -39,13 +36,54 @@ npx design-with-intent
 
 The interactive wizard guides you through five quick steps:
 
-1. **Agent Selection**: Auto-detects Claude Code, Cursor, Codex, or Antigravity (or install for all).
-2. **Operating Mode**: Choose **redesign** (existing site), **create** (from scratch), **repair** (fix bug), or **audit** (review).
-3. **Product Context**: Clarify your audience, primary user flow, target screen, and what must stay preserved.
-4. **Visual Direction**: Select one of 6 starting theme recipes or define a custom direction with reference URLs.
-5. **Launch**: Review what will be written, then paste **`DWI-PROMPT.md`** into your AI coding agent.
+1. **Connect**: Choose Claude Code, Cursor, Codex, or Antigravity (or install for all).
+2. **Product**: Choose redesign, create, repair, or audit. Describe the audience, main task, scope, and protected features.
+3. **Direction**: Choose one of seven starting recipes or Custom, then describe personality, available assets, and what to avoid.
+4. **Motion**: Choose Restrained, Expressive, or Minimal; review the interaction and reduced-motion requirements.
+5. **Review and build**: Confirm the brief, then paste **`DWI-PROMPT.md`** into your coding agent. Review its implementation at desktop and mobile sizes.
 
 The wizard writes `DWI-BRIEF.md` and `DWI-PROMPT.md`. Existing `DESIGN.md` and existing skill files are preserved.
+
+### Install once, then open the studio
+
+Run these commands in **your website project**, not inside this package's source:
+
+```sh
+npm install -D design-with-intent --foreground-scripts
+npx design-with-intent setup
+```
+
+npm may hide lifecycle output or disable install scripts. Installation never waits for answers or writes a brief inside node_modules. The second command reliably opens the questionnaire; running `npx design-with-intent` in an interactive terminal opens it too. Enter a menu number, press Enter to accept a default, or enter `q` to cancel. `NO_COLOR=1` disables terminal color. CI stays non-interactive.
+
+After setup:
+
+1. Read `DWI-BRIEF.md`; edit anything that does not describe your product.
+2. Open `DWI-PROMPT.md` and paste it into your coding agent in the same project.
+3. Ask the agent to implement the main flow using the installed skill and brief.
+4. Review matching desktop/mobile views, actual content, keyboard focus, touch, and reduced motion. Ask for specific corrections.
+5. Keep the chosen design decisions and verification evidence in `DESIGN.md`.
+
+For an existing installation, `npx design-with-intent@latest install codex --force` updates the skill with backups (replace `codex` with your target). Existing briefs are preserved; edit them or use `brief --force` for backed-up replacement.
+
+### Choose deliberate motion
+
+```sh
+npx design-with-intent brief --product "Studio camera" --theme precision --personality "Calm, precise, confident" --motion restrained --assets "Product photography" --avoid "Decorative counters"
+npx design-with-intent motion restrained
+```
+
+The second command prints CSS custom properties. Save them to a new CSS file and import it explicitly if useful. Profiles are starting points, not an animation runtime: your agent implements component behavior, interruption, focus, and reduced-motion alternatives. Minimal removes movement timing; Expressive permits more visible occasional storytelling. No profile delays important user actions.
+
+```text
+DESIGN WITH INTENT
+Design studio / purposeful interfaces
+
+[1/5] Connect your coding agent
+[2/5] Understand the product
+[3/5] Choose a visual direction
+[4/5] Give motion a purpose
+[5/5] Review your design brief
+```
 
 ---
 
@@ -67,7 +105,7 @@ npx design-with-intent brief --mode redesign --product "Trail Booking" --theme f
 Use when building a new product or feature from scratch. The agent formulates 2–3 structurally distinct visual directions rooted in a **Reference Triad** (1 direct peer, 1 adjacent domain, 1 real-world physical artifact) before writing code.
 
 ```sh
-npx design-with-intent brief --mode create --product "Warehouse Logistics" --theme clean-operations
+npx design-with-intent brief --mode create --product "Warehouse Logistics" --theme signal-desk
 ```
 
 ### 3. 🛡️ Repair Mode (`--mode repair`)
@@ -89,7 +127,7 @@ npx design-with-intent prompt audit
 
 ---
 
-## 🎨 6 Built-in Theme Recipes
+## 🎨 7 Built-in Theme Recipes
 
 Explore production-grade starting directions with typography pairings and WCAG AA verified color palettes:
 
@@ -101,14 +139,15 @@ npx design-with-intent themes
 npx design-with-intent themes field-notes
 ```
 
-| Theme ID | Aesthetic Character | Typography | Key Palette | Best For |
-| :--- | :--- | :--- | :--- | :--- |
-| **`field-notes`** | Tactical, earthy, research-grade | Editorial Serif + Mono | `#1E3A2B` on `#FAF8F5` | Field research, conservation, documentation |
-| **`clean-operations`** | High-density telemetry & utility | Technical Sans + Mono | `#0F172A` on `#F8FAFC` | Dashboards, logistics, developer tools |
-| **`cultural-heritage`** | Warm editorial, archival, artisanal | Classical Serif + Humanist Sans | `#2C1810` on `#FDFCFA` | Arts, cultural events, culinary, archives |
-| **`warm-editorial`** | Gallery exhibition, luxury publishing | Refined Serif + Minimal Sans | `#1A1A1A` on `#F5F2EB` | Portfolios, magazines, high-end commerce |
-| **`modern-industrial`** | High-contrast, structured precision | Grotesque Sans + Tech Mono | `#18181B` on `#FAFAFA` | Manufacturing, transport, hard-tech |
-| **`public-service`** | Hyper-accessible, calm, utilitarian | High-legibility Sans | `#0B2545` on `#FFFFFF` | Civic forms, healthcare, public institutions |
+| Theme ID | Best for | Base text / surface |
+| --- | --- | --- |
+| `field-notes` | Field research, outdoor services, environmental observations | `#203328` / `#F4F7EF` |
+| `signal-desk` | Operational consoles, telemetry, developer tools | `#EDF3FC` / `#101A29` |
+| `culture-poster` | Festivals, exhibitions, music, cultural programs | `#382126` / `#FFF4E8` |
+| `workshop` | Manufacturing, logistics, professional equipment | `#222B31` / `#F0F2F3` |
+| `gallery` | Architecture, photography, portfolios, visual catalogs | `#25272B` / `#FAFAF8` |
+| `public-service` | Applications, appointments, education, essential services | `#152D47` / `#F4F8FC` |
+| `precision` | Premium products, focused software, and considered product storytelling | `#1D1D1F` / `#FAFAFC` |
 
 Themes are starting points—not rigid templates. Adapt them to real content and explicit brand constraints.
 
@@ -122,9 +161,10 @@ All commands run via `npx design-with-intent <command>` or `dwi <command>`:
 | :--- | :--- | :--- |
 | `wizard` / `setup` | *None* | Launch the interactive guided setup wizard |
 | `install` | `[target]` (`claude`, `cursor`, `codex`, `antigravity`, `all`, `auto`) | Install skill into agent directories (default: `auto`) |
-| `brief` | `--mode`, `--product`, `--audience`, `--task`, `--scope`, `--problems`, `--preserve`, `--theme`, `--force` | Generate `DWI-BRIEF.md` and `DWI-PROMPT.md` without prompts |
+| `brief` | `--mode`, `--product`, `--audience`, `--task`, `--scope`, `--problems`, `--preserve`, `--references`, `--theme`, `--personality`, `--assets`, `--avoid`, `--motion`, `--force` | Generate `DWI-BRIEF.md` and `DWI-PROMPT.md` without prompts |
 | `prompt` | `[mode]` (`redesign`, `create`, `repair`, `audit`) | Print a reusable prompt template to stdout |
-| `themes` | `[theme-id]` | Browse all 6 starting recipes or display one in detail |
+| `themes` | `[theme-id]` | Browse all 7 starting recipes or display one in detail |
+| `motion` | `[restrained\|expressive\|minimal]` | Print optional CSS motion tokens to stdout |
 | `doctor` | *None* | Inspect workspace health, installed skills, and Playwright status |
 | `guide` | *None* | Print guidance on how to activate and prompt the installed skill |
 | `record` | *None* | Initialize a canonical `DESIGN.md` decision record |
@@ -226,7 +266,7 @@ const contrast = calculateContrast('#1E3A2B', '#FAF8F5');
 console.log(`Contrast ratio: ${contrast.ratio}:1 (Passes AA: ${contrast.passesAA})`);
 
 const touchCheck = checkTargetSize(48, 48);
-console.log(`Meets mobile standards: ${touchCheck.meetsMobile}`);
+console.log(`Meets mobile standards: ${touchCheck.mobileRecommended}`);
 ```
 
 ---
@@ -234,7 +274,7 @@ console.log(`Meets mobile standards: ${touchCheck.meetsMobile}`);
 ## 🧪 Development & Testing
 
 ```sh
-# Run comprehensive test suite (22 unit/integration + 26 evaluation checks)
+# Run comprehensive test suite (27 unit/integration + 26 evaluation checks)
 npm test
 
 # Validate SKILL.md frontmatter, links, word count, and JSON schemas
@@ -252,4 +292,4 @@ npm pack --dry-run
 ## 📄 License & Attribution
 
 - **Design with Intent** is licensed under the [MIT License](./LICENSE). Copyright (c) 2026 SHEKHAR JAAT (SHEKHAR3512).
-- Selected guidance adapted from [Anthropic frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design), [Composio](https://github.com/composio-community/awesome-codex-skills), and [Owl-Listener](https://github.com/Owl-Listener/designer-skills). Applicable attribution notices are preserved in [`skills/design-with-intent/licenses/`](skills/design-with-intent/licenses/) and documented in [`sources.md`](skills/design-with-intent/references/sources.md).
+- Selected guidance adapted from [Anthropic frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design), [Composio](https://github.com/composio-community/awesome-codex-skills), [Emil Kowalski](https://github.com/emilkowalski/skills), and [Owl-Listener](https://github.com/Owl-Listener/designer-skills). Applicable attribution notices are preserved in [`skills/design-with-intent/licenses/`](skills/design-with-intent/licenses/) and documented in [`sources.md`](skills/design-with-intent/references/sources.md).

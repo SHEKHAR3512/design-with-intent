@@ -36,6 +36,8 @@ Use [research](./references/research.md) for unfamiliar domains and reference se
 
 For create and redesign, read [art direction](./references/art-direction.md). Compare two plausible directions in a short description or wireframe. They must differ in composition, hierarchy, type treatment, or content pacing, not merely accent hue. Choose the stronger fit and proceed unless the user requested a selection checkpoint.
 
+For polished product interfaces, read [premium craft](./references/premium-craft.md). Apply the brief's personality, available assets, and avoid-list. Treat premium as a standard of clarity, precision, and complete behavior; do not impose Apple branding, glass, or a single layout on every product.
+
 Specify these decisions concretely:
 
 - **Composition:** What users notice first, the dominant element, where the main action sits, and how content groups relate.
@@ -55,6 +57,8 @@ Read [visual systems](./references/visual-system.md) for tokens and [web impleme
 Build with realistic text lengths and authentic supplied assets. Imagery must convey something about the subject; when tools or usable assets are absent, choose an intentional typographic or data-led composition and disclose placeholders. Do not fabricate social proof, customer logos, statistics, or testimonial quotes.
 
 Implement meaningful loading, empty, error, disabled, focus, and success states where relevant. Controls must work with keyboard and pointer. Motion should explain feedback or a transition, with reduced-motion support; optional decoration must not obscure the task. Avoid adding a dependency solely for a small visual effect.
+
+When adding or reviewing animation, read [motion](./references/motion.md). Use the brief's restrained, expressive, or minimal profile, respecting established product constraints. Record purpose, timing, interruption, and reduced-motion alternatives for meaningful transitions. Verify rapid interaction and focus behavior in a running browser; a still screenshot does not validate motion.
 
 Repair mode uses [repair](./references/repair.md); it does not require alternative directions or broad visual change. Audit mode uses [critique](./references/critique.md), and reports fixes without applying them.
 

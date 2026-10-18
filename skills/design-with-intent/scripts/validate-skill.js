@@ -29,7 +29,7 @@ if (!fs.existsSync(skillPath)) {
   const content = fs.readFileSync(skillPath, 'utf8');
   
   // Frontmatter check
-  const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+  const fmMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!fmMatch) {
     errors.push("SKILL.md is missing YAML frontmatter");
   } else {
@@ -74,7 +74,7 @@ const expectedReferences = [
   'web.md',
   'research.md',
   'design-record.md', 'art-direction.md', 'themes.md', 'critique.md',
-  'browser-testing.md', 'accessibility.md', 'diagrams.md', 'sources.md'
+  'premium-craft.md', 'motion.md', 'browser-testing.md', 'accessibility.md', 'diagrams.md', 'sources.md'
 ];
 
 for (const ref of expectedReferences) {
@@ -96,7 +96,7 @@ for (const ref of fs.readdirSync(path.join(skillDir, 'references')).filter(f => 
     if (!fs.existsSync(path.resolve(path.dirname(file), target))) errors.push(`Broken link in ${ref}: ${target}`);
   }
 }
-for (const asset of ['assets/themes.json', 'licenses/Apache-2.0.txt', 'licenses/Owl-Listener-MIT.txt', 'scripts/capture.mjs']) {
+for (const asset of ['licenses/Emil-Kowalski-MIT.txt', 'assets/themes.json', 'licenses/Apache-2.0.txt', 'licenses/Owl-Listener-MIT.txt', 'scripts/capture.mjs']) {
   if (!fs.existsSync(path.join(skillDir, asset))) errors.push(`Missing bundled resource: ${asset}`);
 }
 

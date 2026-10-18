@@ -3,6 +3,19 @@
 All notable changes to the `design-with-intent` package are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-10-18
+
+### Added
+- Five-stage terminal setup with design personality, assets, avoid-list, motion selection, review, and step-by-step handoff.
+- Precision visual direction; seven bundled themes with checked base contrast pairs.
+- Restrained, expressive, and minimal motion profiles; optional CSS token output via `dwi motion`.
+- Premium craft and motion references adapted from Emil Kowalski's skills, with MIT attribution included in portable installs.
+- Non-blocking installation welcome and complete installation-to-review documentation.
+
+### Fixed
+- Skill frontmatter validation accepts Windows CRLF line endings.
+- Offline package tests invoke npm portably on Windows.
+
 ## [1.1.0] - 2026-10-16
 
 ### Added

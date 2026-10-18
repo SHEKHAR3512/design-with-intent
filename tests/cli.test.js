@@ -89,7 +89,7 @@ test('install is idempotent, keeps edits, and forced updates back them up', t =>
 test('symlink install destinations are rejected before any writes', t => {
   const cwd = workspace(t);
   const outside = workspace(t);
-  fs.symlinkSync(outside, path.join(cwd, '.agents'), 'dir');
+  fs.symlinkSync(outside, path.join(cwd, '.agents'), process.platform === 'win32' ? 'junction' : 'dir');
   assert.throws(() => installSkill({ cwd, target: 'all' }), /symlink/);
   assert.deepEqual(fs.readdirSync(outside), []);
   assert.ok(!fs.existsSync(path.join(cwd, '.claude')));
@@ -120,7 +120,7 @@ test('record safely serializes quotes, newlines, and backslashes', () => {
 test('wizard consumes piped answers and completes guided setup without replacing DESIGN.md', t => {
   const cwd = workspace(t);
   fs.writeFileSync(path.join(cwd, 'DESIGN.md'), 'protected');
-  const answers = ['1', '3', '1', 'Trail booking', 'Hikers', 'Book a trip', '/booking', 'Generic cards', 'Logo and booking', '', '2', 'y', ''];
+  const answers = ['1', '3', '1', 'Trail booking', 'Hikers', 'Book a trip', '/booking', 'Generic cards', 'Logo and booking', '', '2', 'Calm and precise', 'Product photography', 'Decorative counters', '1', 'y', ''];
   const result = run(cwd, ['wizard'], answers.join('\n'));
   assert.equal(result.status, 0, result.stderr);
   assert.ok(fs.existsSync(path.join(cwd, 'DWI-PROMPT.md')), result.stdout);

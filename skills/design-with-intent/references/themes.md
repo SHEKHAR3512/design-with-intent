@@ -1,6 +1,6 @@
 # Theme recipes and semantic application
 
-Adapted conceptually from Composio's theme-factory (Apache-2.0). The six DWI recipes, palettes, and layout descriptions are new; they are not copies of its ten preset themes. See sources.md.
+Adapted conceptually from Composio's theme-factory (Apache-2.0). The seven DWI recipes, palettes, and layout descriptions are new; they are not copies of its ten preset themes. See sources.md.
 
 Use ../assets/themes.json, or `dwi themes`, to inspect directions. Each includes suitable contexts, composition, typography roles, semantic colors, a signature detail, and a misuse to avoid. A theme is a starting hypothesis, not a finished design.
 

@@ -4,6 +4,8 @@ Reviewed 2026-10-16. DWI integrates focused design workflows rather than install
 
 ## Adapted guidance distributed with the bundle
 
+Reviewed 2026-10-18: [emilkowalski/skills](https://github.com/emilkowalski/skills), revision `2d228630ba1446365f614a108cb8252f1feda202`, specifically `apple-design/SKILL.md` and `emil-design-eng/SKILL.md`. Focused adaptations appear in [premium craft](premium-craft.md) and [motion](motion.md): purposeful motion, interruption continuity, typography, hierarchy, and interaction polish. DWI supplies its own profile values, terminal questions, CSS token emitter, and acceptance exercises. The upstream [MIT notice](../licenses/Emil-Kowalski-MIT.txt) accompanies every skill install. No upstream or Apple endorsement is implied.
+
 | Source | Revision reviewed | What DWI integrates |
 | --- | --- | --- |
 | [Anthropic frontend-design](https://github.com/anthropics/skills/tree/dbd4588f9e1033efb41dad4bef2f7947c8993d44/skills/frontend-design) | dbd4588f9e1033efb41dad4bef2f7947c8993d44 | Product-grounded art direction, concrete typography/composition, meaningful signature detail, self-critique; adapted in art-direction.md and the core workflow |
